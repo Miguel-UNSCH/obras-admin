@@ -19,6 +19,8 @@ import toasterCustom from "../toaster-custom";
 import { useState } from "react";
 import { ConfirmDialog } from "../dialog/dialog-confirm";
 
+import * as motion from "motion/react-client";
+
 interface obra {
   id: string;
   state: string;
@@ -88,6 +90,8 @@ function DescriptionWork({
     }
   };
 
+  const porcentaje = 1; //AQUI VENDRA CUANDO SE ACTUALICE EL PORCENTAJE DE LA OBRA
+
   return (
     <div className="flex flex-col justify-center h-full p-6 gap-2 bg-white dark:bg-gray-800 shadow-lg">
       <p className="font-bold text-gray-900 dark:text-white text-justify p-4 text-sm">
@@ -134,7 +138,25 @@ function DescriptionWork({
           )}
         </div>
       </div>
-      <div className="flex justify-center sm:justify-end space-x-2">
+      <div className="flex justify-center sm:justify-end items-center space-x-2">
+        <div className="flex relative bg-slate-300 w-full h-1/2 rounded-full overflow-hidden z-0">
+          <motion.div
+            initial={{
+              width: "0%",
+            }}
+            animate={{
+              width: `${porcentaje * 100}%`,
+            }}
+            transition={{
+              duration: 2,
+            }}
+            className="absolute top-0 left-0 h-full bg-green-400"
+          ></motion.div>
+          <p className="absolute top-0 left-0 w-full h-full flex items-center justify-center font-bold z-10">
+            {porcentaje * 100} %
+          </p>
+        </div>
+
         {resident && (
           <Button
             className="bg-[#03BB85] hover:bg-[#67DDBD]"
@@ -148,6 +170,7 @@ function DescriptionWork({
           <Button
             onClick={handlemensajeFinalizar}
             className="bg-fuchsia-900 hover:bg-fuchsia-700"
+            disabled={Math.abs(porcentaje - 1) > 0}
           >
             <IoIosSend /> Finalizar
           </Button>

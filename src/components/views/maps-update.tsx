@@ -227,7 +227,7 @@ function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
               id="line-layer"
               type="line"
               paint={{
-                "line-color": "#FF0000",
+                "line-color": "#F7700A",
                 "line-width": 5,
               }}
             />

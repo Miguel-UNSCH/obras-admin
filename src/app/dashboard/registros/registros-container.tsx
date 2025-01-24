@@ -9,7 +9,11 @@ interface Register {
   count: number;
 }
 
-export default function RegistrosContainer({ registros }: { registros: Register[] }) {
+export default function RegistrosContainer({
+  registros,
+}: {
+  registros: Register[];
+}) {
   return (
     <div className="space-y-4">
       {registros.map((registro, index) => (
@@ -20,8 +24,6 @@ export default function RegistrosContainer({ registros }: { registros: Register[
 }
 
 function RegistroItem({ registro }: { registro: Register }) {
-  const isUpdated = registro.count !== 0;
-
   return (
     <Card className="mb-4">
       <CardContent className="flex flex-col md:flex-row items-center p-4 space-y-4 md:space-y-0 md:space-x-4">
@@ -51,21 +53,18 @@ function RegistroItem({ registro }: { registro: Register }) {
         </div>
 
         <div className="text-center flex-1 items-center font-semibold justify-center border-l-2 pl-4 w-full md:w-2/12">
-          {isUpdated ? (
+          {registro.count === 0 ? (
+            <div className="flex items-center justify-center space-x-2">
+              <FaUserTimes className="text-red-600" aria-label="Pendiente" />
+              <span className="text-red-700">Pendiente</span>
+            </div>
+          ) : (
             <div className="flex items-center justify-center space-x-2">
               <FaUserCheck
                 className="text-green-400"
                 aria-label="Actualizado"
               />
               <span className="text-green-600">Actualizado</span>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center space-x-2">
-              <FaUserTimes
-                className="text-red-600"
-                aria-label="Pendiente"
-              />
-              <span className="text-red-700">Pendiente</span>
             </div>
           )}
           <p className="text-sm text-gray-600  dark:text-gray-300">

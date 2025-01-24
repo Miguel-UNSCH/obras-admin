@@ -4,7 +4,6 @@ import NewCoordinates from "@/components/views/register-Location";
 import { useState, useMemo } from "react";
 import ButtonSave from "@/components/buttons/dynamic/icons-save";
 import { guardarObra } from "@/actions/obras-actions";
-import * as turf from "@turf/turf";
 import toasterCustom from "@/components/toaster-custom";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/dialog/dialog-confirm";
@@ -23,9 +22,9 @@ interface OptionProps {
   label: string;
 }
 
-interface ObrasContainerProps  {
+interface ObrasContainerProps {
   obras: ObrasProps[];
-};
+}
 
 function ObrasContainer({ obras }: ObrasContainerProps) {
   const [selectedOption, setSelectedOption] = useState<string>("");
@@ -64,18 +63,7 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
   };
 
   const handleConfirmSave = async () => {
-    const coordinates = [...points];
-
-    if (
-      !turf.booleanEqual(
-        turf.point(coordinates[0]),
-        turf.point(coordinates[coordinates.length - 1])
-      )
-    ) {
-      coordinates.push(coordinates[0]);
-    }
-
-    if (coordinates.length < 3) {
+    if (points.length < 3) {
       toasterCustom(
         400,
         "El polígono no tiene suficientes puntos para ser válido."
@@ -83,7 +71,7 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
       return;
     }
 
-    const areaOrLength = medidaTotal(coordinates, projectType);
+    const areaOrLength = medidaTotal(points, projectType);
 
     const obraSeleccionada = obras.find(
       (obra) => obra.codigo_CUI === selectedOption
@@ -94,7 +82,7 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
     }
 
     try {
-      if (!obraSeleccionada || !coordinates || !areaOrLength) {
+      if (!obraSeleccionada || !points || !areaOrLength) {
         toasterCustom(400, "Por favor complete todos los campos requeridos.");
         return;
       }
