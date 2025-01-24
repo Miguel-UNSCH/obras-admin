@@ -3,7 +3,7 @@
 import RegistrosContainer from "./registros-container";
 import { useEffect, useState } from "react";
 import { getCooImg } from "@/actions/register-action";
-import UploadImages from "./UploadImages";
+import UploadImages from "./uploadImages";
 
 interface Record {
   propietario_id: string;
