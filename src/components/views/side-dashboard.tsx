@@ -5,16 +5,16 @@ import { Button } from "@/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import ObraCard from "../obra-card";
 
-interface Obras {
+interface obra {
   id: string;
   state: string;
-  cui: string;
-  name: string;
-  points: [number, number][];
-  areaOrLength: string | null;
+  propietario_id: string;
   resident: string;
   projectType: string;
-  propietario_id: string;
+  cui: string;
+  name: string;
+  areaOrLength: string;
+  points: [number, number][];
 }
 
 interface UserLocation {
@@ -22,20 +22,20 @@ interface UserLocation {
   longitude: number;
 }
 
-type obrasProsp = {
-  obrasT: Obras[]
-  setDefaultLocation: (location: UserLocation) => void
+interface obrasProsp {
+  totalObras: obra[];
+  setDefaultLocation: (location: UserLocation) => void;
 };
 
-function SideDashboard({ obrasT, setDefaultLocation }: obrasProsp) {
-  const [searchValue, setSearchValue] = useState("");
-  const [filteredObras, setFilteredObras] = useState<Obras[]>(obrasT);
+function SideDashboard({ totalObras, setDefaultLocation }: obrasProsp) {
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [filteredObras, setFilteredObras] = useState<obra[]>(totalObras);
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
     const searchTerm = searchValue.toLowerCase();
 
-    const filtered = obrasT.filter((obra) => {
+    const filtered = totalObras.filter((obra) => {
       const matchesSearch =
         obra.name.toLowerCase().includes(searchTerm) ||
         obra.state.toLowerCase().includes(searchTerm) ||
@@ -48,16 +48,17 @@ function SideDashboard({ obrasT, setDefaultLocation }: obrasProsp) {
     setFilteredObras(filtered);
   };
 
-
   useEffect(() => {
-    setFilteredObras(obrasT);
-  }, [obrasT]);
+    setFilteredObras(totalObras);
+  }, [totalObras]);
 
   return (
     <div className="flex flex-col gap-4 h-full w-full max-w-[500px]">
       <div className="text-center text-red-500 dark:text-white bg-clip-text font-extrabold text-xl sm:text-xl md:text-2xl lg:text-4xl">
         <span>Obras por </span>
-        <span className="sm:text-lg md:text-xl lg:text-4xl">administración </span>
+        <span className="sm:text-lg md:text-xl lg:text-4xl">
+          administración{" "}
+        </span>
         <span>directa</span>
       </div>
       <form onSubmit={handleSearch} className="flex flex-col gap-4">
@@ -73,7 +74,11 @@ function SideDashboard({ obrasT, setDefaultLocation }: obrasProsp) {
         <div className="space-y-4">
           {filteredObras.length > 0 ? (
             filteredObras.map((obra, index) => (
-              <ObraCard key={index} obra={obra} setDefaultLocation={setDefaultLocation} />
+              <ObraCard
+                key={index}
+                obra={obra}
+                setDefaultLocation={setDefaultLocation}
+              />
             ))
           ) : (
             <p>No se encontraron resultados para tu búsqueda.</p>

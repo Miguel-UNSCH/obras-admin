@@ -16,9 +16,9 @@ import ButtonClose from "../buttons/dynamic/button-backII";
 import Radio from "./option-figura";
 import { ActualizarObra } from "@/actions/details-action";
 import toasterCustom from "../toaster-custom";
-import * as turf from "@turf/turf";
 import { TbPointFilled } from "react-icons/tb";
 import { ConfirmDialog } from "../dialog/dialog-confirm";
+import medidaTotal from "@/utils/measureWork";
 
 interface Obra {
   id: string;
@@ -31,11 +31,13 @@ interface Location {
   longitude: number;
 }
 
-const MapsUpdate: React.FC<{
+interface obraUpdateProps {
   obra: Obra;
   coordinates: Location;
   setNodal: (value: boolean) => void;
-}> = ({ obra, coordinates, setNodal }) => {
+}
+
+function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   const [points, setPoints] = useState<[number, number][]>(obra.points);
@@ -124,20 +126,8 @@ const MapsUpdate: React.FC<{
   };
 
   const handleSaveClick = async () => {
-    let areaOrLength;
     try {
-      if (projectType === "Superficie") {
-        const polygon = turf.polygon([points.concat([points[0]])]);
-        const area = turf.area(polygon).toFixed(2);
-        areaOrLength = `${area} m²`;
-      } else if (projectType === "Carretera") {
-        const line = turf.lineString(points);
-        const length = turf.length(line, { units: "meters" }).toFixed(2);
-        areaOrLength = `${length} m`;
-      } else {
-        toasterCustom(400, "Tipo de proyecto no válido.");
-        return;
-      }
+      const areaOrLength = medidaTotal(points, projectType);
 
       const data = await ActualizarObra(
         obra.id,
@@ -194,9 +184,9 @@ const MapsUpdate: React.FC<{
         {points.map(([lng, lat], index) => {
           let markerColor = "#FF0000";
           if (index === 0) {
-            markerColor = "#FEE227";
-          } else if (index === points.length - 1) {
             markerColor = "#111114";
+          } else if (index === points.length - 1) {
+            markerColor = "#FEE227";
           }
 
           return (
@@ -250,10 +240,10 @@ const MapsUpdate: React.FC<{
         onConfirm={handleSaveClick}
         title="¿Estas seguro de desea guardar esta nueva coordenada?"
         description="Los cambios se veran reflejados inmediatamente"
-        styleButton="bg-[#00217B] hover:bg-[#0694F6]"
+        styleButton="bg-green-600 hover:bg-green-500"
       />
     </div>
   );
-};
+}
 
 export default MapsUpdate;

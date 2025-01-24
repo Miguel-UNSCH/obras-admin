@@ -211,27 +211,27 @@ function NewCoordinates({
         {newPoints.map(([lng, lat], index) => {
           let markerColor = "#FF0000";
           if (index === 0) {
-            markerColor = "#FEE227";
-          } else if (index === newPoints.length - 1) {
             markerColor = "#111114";
+          } else if (index === newPoints.length - 1) {
+            markerColor = "#FEE227";
           }
           return (
-          <Marker
-            key={index}
-            longitude={lng}
-            latitude={lat}
-            draggable
-            onDrag={(event) => {
-              const { lng: newLng, lat: newLat } = event.lngLat;
-              setNewPoints((prevPoints) => {
-                const updatedPoints = [...prevPoints];
-                updatedPoints[index] = [newLng, newLat];
-                return updatedPoints;
-              });
-            }}
-          >
-            <TbPointFilled size={20} color={markerColor}  />
-          </Marker>
+            <Marker
+              key={index}
+              longitude={lng}
+              latitude={lat}
+              draggable
+              onDrag={(event) => {
+                const { lng: newLng, lat: newLat } = event.lngLat;
+                setNewPoints((prevPoints) => {
+                  const updatedPoints = [...prevPoints];
+                  updatedPoints[index] = [newLng, newLat];
+                  return updatedPoints;
+                });
+              }}
+            >
+              <TbPointFilled size={20} color={markerColor} />
+            </Marker>
           );
         })}
 

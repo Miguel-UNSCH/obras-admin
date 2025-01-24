@@ -1,38 +1,36 @@
 import DescriptionWork from "@/components/views/description-work";
 import MapDrawingPolygon from "@/components/views/map-drawing-polygon";
 
-interface Obra {
+interface obra {
   id: string;
   state: string;
-  cui: string;
-  name: string;
-  points: [number, number][];
-  areaOrLength: string | null;
+  propietario_id: string;
   resident: string;
   projectType: string;
-  propietario_id: string;
+  cui: string;
+  name: string;
+  areaOrLength: string;
+  points: [number, number][];
 }
 
-const DetallesContainer: React.FC<{ obra: Obra, resident: boolean }> = ({
-  obra,
-  resident,
-}) => {
+function DetallesContainer({ obraDetalles, resident }: { obraDetalles: obra, resident: boolean }) {
+
   const mapDetails = {
-    id: obra.id,
-    state: obra.state,
-    points: obra.points,
-    projectType: obra.projectType,
+    id: obraDetalles.id,
+    state: obraDetalles.state,
+    points: obraDetalles.points,
+    projectType: obraDetalles.projectType,
   };
 
   const descriptionDetails = {
-    id: obra.id,
-    state: obra.state,
-    cui: obra.cui,
-    name: obra.name,
-    areaOrLength: obra.areaOrLength,
-    resident: obra.resident,
-    projectType: obra.projectType,
-    propietario_id: obra.propietario_id,
+    id: obraDetalles.id,
+    state: obraDetalles.state,
+    cui: obraDetalles.cui,
+    name: obraDetalles.name,
+    areaOrLength: obraDetalles.areaOrLength,
+    resident: obraDetalles.resident,
+    projectType: obraDetalles.projectType,
+    propietario_id: obraDetalles.propietario_id,
   };
 
   return (

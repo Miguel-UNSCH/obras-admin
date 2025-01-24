@@ -2,12 +2,14 @@ import React from "react";
 import { Calendar } from "../ui/calendar";
 
 interface DayProps {
-  Daysworked: string [];
+  Daysworked: string[];
   setDay: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function CalendarCustom({ Daysworked, setDay }: DayProps) {
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
+    new Date()
+  );
 
   React.useEffect(() => {
     if (selectedDate) {
@@ -15,9 +17,8 @@ function CalendarCustom({ Daysworked, setDay }: DayProps) {
     }
   }, [selectedDate, setDay]);
 
-  // Convertimos las fechas trabajadas a objetos Date
   const trabajadasDates = Daysworked.map((date) => new Date(date));
-  
+
   return (
     <div className="grid grid-cols h-full w-full sm:p-4 gap-1 shadow-lg rounded-3xl items-center">
       <Calendar

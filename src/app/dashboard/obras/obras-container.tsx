@@ -9,6 +9,7 @@ import toasterCustom from "@/components/toaster-custom";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/dialog/dialog-confirm";
 import { Combobox } from "@/components/select/combobox";
+import medidaTotal from "@/utils/measureWork";
 
 interface ObrasProps {
   nombre: string;
@@ -22,7 +23,7 @@ interface OptionProps {
   label: string;
 }
 
-type ObrasContainerProps = {
+interface ObrasContainerProps  {
   obras: ObrasProps[];
 };
 
@@ -82,33 +83,7 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
       return;
     }
 
-    let areaOrLength;
-
-    if (projectType === "Superficie") {
-      try {
-        const polygon = turf.polygon([coordinates]);
-        const area = turf.area(polygon).toFixed(2);
-        areaOrLength = `${area} m²`;
-      } catch (error) {
-        toasterCustom(500, "Error al calcular el área del polígono." + error);
-        return;
-      }
-    } else if (projectType === "Carretera") {
-      try {
-        const line = turf.lineString(coordinates);
-        const length = turf.length(line, { units: "meters" }).toFixed(2);
-        areaOrLength = `${length} m`;
-      } catch (error) {
-        toasterCustom(
-          500,
-          "Error al calcular la longitud de la línea." + error
-        );
-        return;
-      }
-    } else {
-      toasterCustom(400, "Tipo de proyecto no válido.");
-      return;
-    }
+    const areaOrLength = medidaTotal(coordinates, projectType);
 
     const obraSeleccionada = obras.find(
       (obra) => obra.codigo_CUI === selectedOption

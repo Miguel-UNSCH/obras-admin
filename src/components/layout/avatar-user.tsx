@@ -33,7 +33,7 @@ function AvatarUser() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup className="space-y-2 py-2">
           <DropdownMenuItem className="cursor-pointer w-full p-0">
-            <Link href={"/dashboard/configuracion"} className="flex p-2">
+            <Link href={"/dashboard/configuraciones"} className="flex p-2">
               <User className="mr-2 h-4 w-4" />
               <span>Cuenta</span>
             </Link>

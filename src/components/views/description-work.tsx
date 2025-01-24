@@ -19,21 +19,24 @@ import toasterCustom from "../toaster-custom";
 import { useState } from "react";
 import { ConfirmDialog } from "../dialog/dialog-confirm";
 
-interface Obra {
+interface obra {
   id: string;
   state: string;
-  cui: string;
-  name: string;
-  areaOrLength: string | null;
+  propietario_id: string;
   resident: string;
   projectType: string;
-  propietario_id: string;
+  cui: string;
+  name: string;
+  areaOrLength: string;
 }
 
-const DescriptionWork: React.FC<{ obra: Obra; resident: boolean }> = ({
+function DescriptionWork({
   obra,
   resident,
-}) => {
+}: {
+  obra: obra;
+  resident: boolean;
+}) {
   const [showConfirmationModalU, setShowConfirmationModalU] = useState(false);
   const [showConfirmationModalF, setShowConfirmationModalF] = useState(false);
 
@@ -62,6 +65,7 @@ const DescriptionWork: React.FC<{ obra: Obra; resident: boolean }> = ({
         obra.propietario_id,
         obra.cui
       );
+
       handleUpdateConfirmationModal();
       toasterCustom(res.status, res.message);
       if (res.status === 200) {
@@ -115,7 +119,7 @@ const DescriptionWork: React.FC<{ obra: Obra; resident: boolean }> = ({
         </div>
 
         <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
-          {obra.state === "ejecucion" ? (
+          {obra.state === "Ejecucion" ? (
             <>
               <FaHeartbeat className="text-lg text-green-500" />
               <p className="font-medium">Estado:</p>
@@ -140,7 +144,7 @@ const DescriptionWork: React.FC<{ obra: Obra; resident: boolean }> = ({
           </Button>
         )}
 
-        {obra.state === "ejecucion" && (
+        {obra.state === "Ejecucion" && (
           <Button
             onClick={handlemensajeFinalizar}
             className="bg-fuchsia-900 hover:bg-fuchsia-700"
@@ -149,6 +153,7 @@ const DescriptionWork: React.FC<{ obra: Obra; resident: boolean }> = ({
           </Button>
         )}
       </div>
+
       <ConfirmDialog
         isOpen={showConfirmationModalU}
         onClose={handleUpdateConfirmationModal}
@@ -168,6 +173,6 @@ const DescriptionWork: React.FC<{ obra: Obra; resident: boolean }> = ({
       />
     </div>
   );
-};
+}
 
 export default DescriptionWork;

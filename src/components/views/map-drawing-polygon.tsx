@@ -8,15 +8,16 @@ import { useState } from "react";
 import { Button } from "../buttons/button";
 import { FaPencilRuler } from "react-icons/fa";
 import MapsUpdate from "./maps-update";
+import calculateHalfwayPoint from "@/utils/midPoint";
 
-interface Obra {
+interface obra {
   id: string;
   state: string;
-  points: [number, number][];
   projectType: string;
+  points: [number, number][];
 }
 
-const CustomMap: React.FC<{ obra: Obra }> = ({ obra }) => {
+function CustomMap({ obra }: { obra: obra }) {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   const typeObra = obra.projectType === "Superficie" ? "Polygon" : "LineString";
@@ -25,21 +26,7 @@ const CustomMap: React.FC<{ obra: Obra }> = ({ obra }) => {
 
   const [Nodal, setNodal] = useState(false);
 
-  const calculateCentroid = (
-    coordinates: [number, number][]
-  ): { longitude: number; latitude: number } => {
-    const [sumLon, sumLat] = coordinates.reduce(
-      ([lon, lat], [coordLon, coordLat]) => [lon + coordLon, lat + coordLat],
-      [0, 0]
-    );
-
-    return {
-      latitude: sumLat / coordinates.length,
-      longitude: sumLon / coordinates.length,
-    };
-  };
-
-  const centroid = calculateCentroid(obra.points);
+  const centroid = calculateHalfwayPoint(obra.points, obra.projectType);
 
   const layerConfig =
     typeObra === "Polygon"
@@ -90,7 +77,7 @@ const CustomMap: React.FC<{ obra: Obra }> = ({ obra }) => {
 
   return (
     <div className="relative w-full h-full">
-      {obra.state === "ejecucion" && (
+      {obra.state === "Ejecucion" && (
         <Button
           className="absolute bg-green-600 hover:bg-green-500 top-4 right-4 z-10"
           onClick={handNodal}
@@ -136,6 +123,6 @@ const CustomMap: React.FC<{ obra: Obra }> = ({ obra }) => {
       )}
     </div>
   );
-};
+}
 
 export default CustomMap;

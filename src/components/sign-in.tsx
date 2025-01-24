@@ -68,7 +68,7 @@ export default function SignIn({
       <img
         src="https://affixtheme.com/html/xmee/demo/img/elements/shape1.png"
         alt="puntos"
-        className="absolute top-0 left-0"
+        className="absolute top-0 left-0 h-full"
       />
       <img
         src="https://affixtheme.com/html/xmee/demo/img/elements/bg1.png"

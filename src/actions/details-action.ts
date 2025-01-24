@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { querySecondary } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
-export async function getDetalles(id: string) {
+export async function obtenerDetalles(id: string) {
   try {
     const result = await prisma.coordinates.findMany();
 
@@ -33,7 +33,6 @@ export async function getDetalles(id: string) {
     return null;
   }
 }
-
 
 export async function FinalizarObra(id: string, cui: string) {
   try {
@@ -177,7 +176,6 @@ export async function ActualizarResidenteO(
           password: hashedNewPassword,
         },
       });
-      
     } else {
       await prisma.userPhone.updateMany({
         where: { propietario_id: obraEncontrada?.propietario_id },

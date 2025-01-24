@@ -4,50 +4,50 @@ import DetallesContainer from "./detalles-container";
 import ImagesContainer from "./images-container";
 import {
   BuscarActulizacionResident,
-  getDetalles,
+  obtenerDetalles,
 } from "@/actions/details-action";
 import { getDaysWorked } from "@/actions/img-actions";
 import { useEffect, useState } from "react";
 
-interface Obra {
+interface obra {
   id: string;
   state: string;
-  cui: string;
-  name: string;
-  points: [number, number][];
-  areaOrLength: string;
+  propietario_id: string;
   resident: string;
   projectType: string;
-  propietario_id: string;
+  cui: string;
+  name: string;
+  areaOrLength: string;
+  points: [number, number][];
 }
 
-interface Imgs {
+interface imgs {
   id: string;
-  url: string | null;
+  url: string;
   latitud: string | null;
   longitud: string | null;
   propietario_id: string;
-  date: string | null;
+  date: string;
 }
 
 function Page() {
   const { id } = useParams();
-  const [obra, setObra] = useState<Obra | null>(null);
-  const [img, setImg] = useState<Imgs[]>([]);
+  const [obra, setObra] = useState<obra | null>(null);
+  const [img, setImg] = useState<imgs[]>([]);
   const [resident, setResident] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       if (id && typeof id === "string") {
-        const data = await getDetalles(id);
+        const data = await obtenerDetalles(id);
         setObra(data);
 
         if (data && data.propietario_id) {
           const imgs = await getDaysWorked(data.propietario_id);
           setImg(imgs);
 
-          if (data.state === "Finalizado") {
-            setResident(false)
+          if (data.state === "finalizado") {
+            setResident(false);
           } else {
             const obraActualizada = await BuscarActulizacionResident(
               data.cui,
@@ -75,7 +75,7 @@ function Page() {
         <ImagesContainer imgs={img} />
       </div>
       <div className="h-full">
-        <DetallesContainer obra={obra} resident={resident} />
+        <DetallesContainer obraDetalles={obra} resident={resident} />
       </div>
     </div>
   );

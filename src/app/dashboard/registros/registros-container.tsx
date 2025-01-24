@@ -9,7 +9,7 @@ interface Register {
   count: number;
 }
 
-export default function Registros({ registros }: { registros: Register[] }) {
+export default function RegistrosContainer({ registros }: { registros: Register[] }) {
   return (
     <div className="space-y-4">
       {registros.map((registro, index) => (

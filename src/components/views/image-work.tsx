@@ -1,15 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 
-interface Imgs {
+interface imgs {
   id: string;
-  url: string | null;
+  url: string;
   latitud: string | null;
   longitud: string | null;
-  date: string | null;
+  propietario_id: string;
+  date: string;
 }
 
-const ImageWork: React.FC<{ imgs: Imgs[] | null }> = ({ imgs }) => {
+function ImageWork({ imgs }: { imgs: imgs[] | null }) {
   if (!imgs || imgs.length === 0) {
     return (
       <div className="p-4 gap-4 text-center text-cyan-900 dark:text-teal-400 flex flex-col h-full justify-center items-center">
@@ -32,7 +33,7 @@ const ImageWork: React.FC<{ imgs: Imgs[] | null }> = ({ imgs }) => {
         imgs.map((img, i) => (
           <div
             key={i}
-            className="h-60 w-full bg-red-200 rounded-lg overflow-hidden shadow-md"
+            className="h-60 w-full bg-slate-300 rounded-lg overflow-hidden shadow-md"
           >
             <img
               src={img.url || ""}
@@ -45,6 +46,6 @@ const ImageWork: React.FC<{ imgs: Imgs[] | null }> = ({ imgs }) => {
         ))}
     </div>
   );
-};
+}
 
 export default ImageWork;

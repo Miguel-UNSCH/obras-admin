@@ -5,7 +5,7 @@ import { querySecondary } from "@/lib/db";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-export async function getObras() {
+export async function totalObrasRegistradas() {
   try {
     const result = await prisma.coordinates.findMany({
       orderBy: {
@@ -16,13 +16,13 @@ export async function getObras() {
     return result.map((obra: any) => ({
       id: obra.id,
       state: obra.state,
-      cui: obra.cui,
-      name: obra.name,
+      propietario_id: obra.propietario_id,
       resident: obra.resident,
       projectType: obra.projectType,
-      points: JSON.parse(obra.points),
+      cui: obra.cui,
+      name: obra.name,
       areaOrLength: obra.areaOrLength,
-      propietario_id: obra.propietario_id,
+      points: JSON.parse(obra.points),
     }));
   } catch (error) {
     console.error("Error al buscar obras:", error);
@@ -121,12 +121,7 @@ export async function guardarObra(
     };
   } catch (error: unknown) {
     const errorStatus = error instanceof Error ? 500 : 400;
-    console.error("Error al actualizar la obra:", error);
-
-    if (error instanceof Error) {
-      console.error("Error details:", error.message, error.stack);
-    }
-
+    console.error("Error al guardar la obra:", error);
     return {
       message: "La obra no se pudo guardar",
       status: errorStatus,

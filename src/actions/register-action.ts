@@ -25,7 +25,7 @@ export async function getCooImg() {
 
     const coordinatesToday = await prisma.coordinates.findMany({
       where: {
-        state:"ejecucion",
+        state:"Ejecucion",
       },
       select: {
         propietario_id: true,

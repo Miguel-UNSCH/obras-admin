@@ -5,29 +5,29 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Map, { NavigationControl, ViewState } from "react-map-gl";
 import LocationObras from "./location-works";
 
-interface Obras {
+interface obra {
   id: string;
   state: string;
-  cui: string;
-  name: string;
-  points: [number, number][];
-  areaOrLength: string | null;
+  propietario_id: string;
   resident: string;
   projectType: string;
-  propietario_id: string;
+  cui: string;
+  name: string;
+  areaOrLength: string;
+  points: [number, number][];
 }
-
-type ObrasProps = {
-  obrasT: Obras[];
-  defaultLocation: UserLocation;
-};
 
 interface UserLocation {
   latitude: number;
   longitude: number;
 }
 
-function CustomMap({ obrasT, defaultLocation }: ObrasProps) {
+interface obrasProps {
+  obrasT: obra[];
+  defaultLocation: UserLocation;
+}
+
+function CustomMap({ obrasT, defaultLocation }: obrasProps) {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   const [styleLoaded, setStyleLoaded] = useState(false);
@@ -41,7 +41,10 @@ function CustomMap({ obrasT, defaultLocation }: ObrasProps) {
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
   });
 
-  const [containerSize, setContainerSize] = useState<{ width: number; height: number }>({
+  const [containerSize, setContainerSize] = useState<{
+    width: number;
+    height: number;
+  }>({
     width: 0,
     height: 0,
   });

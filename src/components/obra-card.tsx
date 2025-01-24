@@ -1,16 +1,17 @@
 import React from "react";
 import { TbMapPinShare } from "react-icons/tb";
+import calculateHalfwayPoint from "@/utils/midPoint";
 
-interface Obra {
+interface obra {
   id: string;
   state: string;
-  cui: string;
-  name: string;
-  points: [number, number][];
-  areaOrLength: string | null;
+  propietario_id: string;
   resident: string;
   projectType: string;
-  propietario_id: string;
+  cui: string;
+  name: string;
+  areaOrLength: string;
+  points: [number, number][];
 }
 
 interface UserLocation {
@@ -18,40 +19,13 @@ interface UserLocation {
   longitude: number;
 }
 
-const ObraCard: React.FC<{
-  obra: Obra;
+interface obrasProsp {
+  obra: obra;
   setDefaultLocation: (location: UserLocation) => void;
-}> = ({ obra, setDefaultLocation }) => {
-  const calculateCentroid = (
-    coordinates: [number, number][]
-  ): { longitude: number; latitude: number } => {
-    let sumLat = 0;
-    let sumLon = 0;
+}
 
-    coordinates.forEach((coord) => {
-      sumLat += coord[1];
-      sumLon += coord[0];
-    });
-
-    return {
-      latitude: sumLat / coordinates.length,
-      longitude: sumLon / coordinates.length,
-    };
-  };
-  const calculateMitad = (
-    coordinates: [number, number][]
-  ): { longitude: number; latitude: number } => {
-    const midIndex = Math.floor(coordinates.length / 2);
-    return {
-      latitude: coordinates[midIndex][1],
-      longitude: coordinates[midIndex][0],
-    };
-  };
-
-  const centroid =
-    obra.projectType === "Superficie"
-      ? calculateCentroid(obra.points)
-      : calculateMitad(obra.points);
+function ObraCard({ obra, setDefaultLocation }: obrasProsp) {
+  const centroid = calculateHalfwayPoint(obra.points, obra.projectType);
 
   const handleIconClick = () => {
     setDefaultLocation(centroid);
@@ -80,6 +54,6 @@ const ObraCard: React.FC<{
       <span className="text-sm text-gray-400">Residente: {obra.resident}</span>
     </div>
   );
-};
+}
 
 export default ObraCard;
