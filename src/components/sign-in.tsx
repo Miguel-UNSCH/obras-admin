@@ -124,6 +124,7 @@ export default function SignIn({
         </motion.div>
         <motion.img
           initial={{
+            opacity: 0.7,
             scale: 0.1
           }}
           animate={{
@@ -136,7 +137,7 @@ export default function SignIn({
           }}
           src="./imagenes/portada.webp"
           alt="log"
-          className="absolute top-1/2 left-1/2 z-1 -translate-x-1/2 -translate-y-1/2 w-1/2"
+          className="absolute top-1/2 left-1/2 z-1 -translate-x-1/2 -translate-y-1/2 w-2/3"
         />
         <div className="relative z-10 w-full max-w-sm">
           {showServerError && (
