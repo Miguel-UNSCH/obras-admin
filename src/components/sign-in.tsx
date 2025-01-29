@@ -107,7 +107,13 @@ export default function SignIn({
             />
           </Link>
           <div className="space-y-4 h-full flex flex-col justify-center max-w-72">
-            <h2 className="text-2xl font-bold">Iniciar Sesión en GeoObras</h2>
+            <div className="font-bold text-center">
+              <span className="text-4xl text-rose-500 dark:text-red-500">
+                Iniciar Sesión
+              </span>
+              <br />
+              <span className="text-2xl">GeObras</span>
+            </div>
             <ul className="list-disc list-inside text-gray-600 dark:text-gray-300">
               <li>Organiza tus obras con un solo clic.</li>
               <li>Tus proyectos en un solo lugar.</li>
@@ -118,21 +124,19 @@ export default function SignIn({
         </motion.div>
         <motion.img
           initial={{
-            opacity: 0,
-            x: -2000,
+            scale: 0.1
           }}
           animate={{
-            opacity: 1,
-            x: 0,
+            scale: 0.5,
             transform: "translate(-50%, -50%)",
           }}
           transition={{
             duration: 0.5,
             ease: "easeInOut",
           }}
-          src="https://affixtheme.com/html/xmee/demo/img/figure/bg34-1.png"
+          src="./imagenes/portada.webp"
           alt="log"
-          className="absolute top-1/2 left-1/2 z-1 -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 z-1 -translate-x-1/2 -translate-y-1/2 w-1/2"
         />
         <div className="relative z-10 w-full max-w-sm">
           {showServerError && (

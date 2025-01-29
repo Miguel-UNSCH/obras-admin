@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Image from "next/image";
@@ -51,7 +50,7 @@ export default function LandingPage() {
           <div className="md:w-1/2 space-y-6 text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 dark:text-white leading-tight">
               Bienvenido a <br />
-              <span className="text-primary">GeoObras</span>
+              <span className="text-primary">GeObras</span>
             </h1>
             <h2 className="text-black dark:text-white">
               La solución ideal para{" "}
@@ -64,7 +63,7 @@ export default function LandingPage() {
                   "captura evidencia en tiempo real",
                   "organiza tus reportes al instante",
                   "optimiza y asegura resultados",
-                  "¡GeoObras es tu mejor aliado!",
+                  "¡GeObras es tu mejor aliado!",
                 ]}
               />
             </span>
