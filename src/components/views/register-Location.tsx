@@ -1,17 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "mapbox-gl/dist/mapbox-gl.css";
-import Map, {
-  Marker,
-  NavigationControl,
-  Source,
-  Layer,
-  MapMouseEvent,
-} from "react-map-gl";
+import { MapMouseEvent } from "react-map-gl";
 import { useState, useCallback, useEffect } from "react";
 import { Feature, Polygon, LineString } from "geojson";
-import { TbPointFilled } from "react-icons/tb";
 import ButtonBack from "@/components/buttons/dynamic/icons-back";
 import Radio from "./option-figura";
+import MapObras from "./maps-obra";
 
 interface UserLocation {
   latitude: number;
@@ -23,22 +17,14 @@ interface NewCoordinatesProps {
   setProjectTypestyle: (projectType: string) => void;
 }
 
-function NewCoordinates({
-  setPoints,
-  setProjectTypestyle,
-}: NewCoordinatesProps) {
-  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
+function NewCoordinates({ setPoints, setProjectTypestyle }: NewCoordinatesProps) {
   const [polygonData, setPolygonData] = useState<Feature<Polygon> | null>(null);
   const [lineData, setLineData] = useState<Feature<LineString> | null>(null);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [typeError, setTypeError] = useState<number | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const defaultLocation: UserLocation = {
-    latitude: -13.160441,
-    longitude: -74.225832,
-  };
+  const defaultLocation: UserLocation = { latitude: -13.160441, longitude: -74.225832 };
   const [newPoints, setNewPoints] = useState<[number, number][]>([]);
   const [projectType, setProjectType] = useState<string>("Superficie");
 
@@ -81,15 +67,7 @@ function NewCoordinates({
 
   const handleMapClick = useCallback((event: MapMouseEvent) => {
     const { lng, lat } = event.lngLat;
-    setNewPoints((prevPoints) => {
-      const newPoint: [number, number][] = [...prevPoints, [lng, lat]];
-
-      if (JSON.stringify(prevPoints) !== JSON.stringify(newPoint)) {
-        return newPoint;
-      }
-
-      return prevPoints;
-    });
+    setNewPoints((prevPoints) => [...prevPoints, [lng, lat]]);
   }, []);
 
   const handleRemoveLastPoint = () => {
@@ -185,82 +163,17 @@ function NewCoordinates({
         />
       </div>
 
-      <Map
-        mapboxAccessToken={token}
-        initialViewState={{
-          longitude: isClient
-            ? userLocation.longitude
-            : defaultLocation.longitude,
-          latitude: isClient ? userLocation.latitude : defaultLocation.latitude,
-          zoom: 13,
-        }}
-        mapStyle={"mapbox://styles/mapbox/satellite-streets-v12"}
-        onClick={handleMapClick}
-      >
-        <NavigationControl
-          position="bottom-right"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "10px",
-            gap: "10px",
-            borderRadius: "15px",
-          }}
-        />
-
-        {newPoints.map(([lng, lat], index) => {
-          let markerColor = "#FF0000";
-          if (index === 0) {
-            markerColor = "#111114";
-          } else if (index === newPoints.length - 1) {
-            markerColor = "#FEE227";
-          }
-          return (
-            <Marker
-              key={index}
-              longitude={lng}
-              latitude={lat}
-              draggable
-              onDrag={(event) => {
-                const { lng: newLng, lat: newLat } = event.lngLat;
-                setNewPoints((prevPoints) => {
-                  const updatedPoints = [...prevPoints];
-                  updatedPoints[index] = [newLng, newLat];
-                  return updatedPoints;
-                });
-              }}
-            >
-              <TbPointFilled size={20} color={markerColor} />
-            </Marker>
-          );
-        })}
-
-        {projectType === "Superficie" && polygonData?.geometry?.coordinates && (
-          <Source id="polygon-source" type="geojson" data={polygonData}>
-            <Layer
-              id="polygon-layer"
-              type="fill"
-              paint={{
-                "fill-color": "#CA3938",
-                "fill-opacity": 0.5,
-              }}
-            />
-          </Source>
-        )}
-
-        {projectType === "Carretera" && lineData?.geometry?.coordinates && (
-          <Source id="line-source" type="geojson" data={lineData}>
-            <Layer
-              id="line-layer"
-              type="line"
-              paint={{
-                "line-color": "#F7700A",
-                "line-width": 5,
-              }}
-            />
-          </Source>
-        )}
-      </Map>
+      <MapObras
+        isClient={isClient}
+        userLocation={userLocation}
+        defaultLocation={defaultLocation}
+        newPoints={newPoints}
+        setNewPoints={setNewPoints}
+        polygonData={polygonData}
+        lineData={lineData}
+        projectType={projectType}
+        handleMapClick={handleMapClick}
+      />
     </div>
   );
 }

@@ -10,20 +10,20 @@ import { ConfirmDialog } from "@/components/dialog/dialog-confirm";
 import { Combobox } from "@/components/select/combobox";
 import medidaTotal from "@/utils/measureWork";
 
-interface ObrasProps {
+interface ObraProps {
   nombre: string;
   codigo_CUI: string;
-  nombre_completo: string;
   propietario_id: string;
+  nombre_completo: string;
+}
+
+interface ObrasContainerProps {
+  obras: ObraProps[];
 }
 
 interface OptionProps {
   value: string;
   label: string;
-}
-
-interface ObrasContainerProps {
-  obras: ObrasProps[];
 }
 
 function ObrasContainer({ obras }: ObrasContainerProps) {

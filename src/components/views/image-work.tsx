@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import { useState } from "react";
 import Image from "next/image";
+import ImageDetalles from "./images-details";
 
-interface imgs {
+interface ImgProps {
   id: string;
   url: string;
   latitud: string | null;
@@ -10,7 +12,23 @@ interface imgs {
   date: string;
 }
 
-function ImageWork({ imgs }: { imgs: imgs[] | null }) {
+interface LocationObra {
+  projectType: string;
+  points: [number, number][];
+}
+
+interface ImagesContainerProps {
+  imgs: ImgProps[] | null;
+  coordinates: LocationObra | null;
+}
+
+function ImageWork({ imgs, coordinates }: ImagesContainerProps) {
+  const [selectedImage, setSelectedImage] = useState<ImgProps | null>(null);
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
   if (!imgs || imgs.length === 0) {
     return (
       <div className="p-4 gap-4 text-center text-cyan-900 dark:text-teal-400 flex flex-col h-full justify-center items-center">
@@ -28,22 +46,32 @@ function ImageWork({ imgs }: { imgs: imgs[] | null }) {
   }
 
   return (
-    <div className="h-0 grid grid-cols-1 md:grid-cols-2 gap-2 p-4">
-      {imgs &&
-        imgs.map((img, i) => (
-          <div
-            key={i}
-            className="h-60 w-full bg-slate-300 rounded-lg overflow-hidden shadow-md"
-          >
-            <img
-              src={img.url || ""}
-              alt={img.id}
-              className="w-full h-full object-cover"
-              width={500}
-              height={500}
-            />
-          </div>
-        ))}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      {imgs.map((img) => (
+        <div
+          key={img.id}
+          className="h-60 w-full bg-slate-300 rounded-lg overflow-hidden shadow-md cursor-pointer"
+          onClick={() => setSelectedImage(img)}
+        >
+          <img
+            src={img.url || ""}
+            alt={img.id}
+            className="w-full h-full object-cover"
+            width={500}
+            height={500}
+          />
+        </div>
+      ))}
+
+      {selectedImage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+          <ImageDetalles
+            selectedImage={selectedImage}
+            coordinates={coordinates}
+            closeModal={closeModal}
+          />
+        </div>
+      )}
     </div>
   );
 }

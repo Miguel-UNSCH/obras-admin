@@ -90,7 +90,7 @@ function DescriptionWork({
     }
   };
 
-  const porcentaje = 1; //AQUI VENDRA CUANDO SE ACTUALICE EL PORCENTAJE DE LA OBRA
+  const porcentaje = 0.999; //AQUI VENDRA CUANDO SE ACTUALICE EL PORCENTAJE DE LA OBRA
 
   return (
     <div className="flex flex-col justify-center h-full p-6 gap-2 bg-white dark:bg-gray-800 shadow-lg">

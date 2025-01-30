@@ -4,7 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/buttons/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import toasterCustom from "@/components/toaster-custom";
@@ -31,7 +38,6 @@ type CuentaContainerProps = {
 };
 
 export function CuentaContainer({ session }: CuentaContainerProps) {
-
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,14 +47,15 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowNewPassword = () => setShowNewPassword(!showNewPassword);
-  const toggleShowConfirmNewPassword = () => setShowConfirmNewPassword(!showConfirmNewPassword);
+  const toggleShowConfirmNewPassword = () =>
+    setShowConfirmNewPassword(!showConfirmNewPassword);
 
   const form = useForm<z.infer<typeof updateUserSchema>>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
       id: session.user.id,
       name: session.user.name,
-      email: session.user.email || "",
+      email: session.user.email,
       user: session.user.user,
       password: "",
       newPassword: "",
@@ -57,7 +64,6 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
   });
 
   async function onSubmit(values: z.infer<typeof updateUserSchema>) {
-
     toasterCustom(0);
 
     const data = await updateUser(values);
@@ -79,7 +85,10 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
       toast.dismiss();
       toasterCustom(data.status, data.message);
       if (data.field) {
-        form.setError(data.field === 1 ? "password" : "confirmNewPassword", { type: "error", message: data.message });
+        form.setError(data.field === 1 ? "password" : "confirmNewPassword", {
+          type: "error",
+          message: data.message,
+        });
         form.setFocus(data.field === 1 ? "password" : "confirmNewPassword");
       }
       setIsSubmitting(false);
@@ -88,7 +97,10 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-w-md mx-auto p-4 w-full">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4 max-w-md mx-auto p-4 w-full"
+      >
         <h2 className="text-2xl font-bold mb-4 text-center">Mi Cuenta</h2>
 
         <FormField
@@ -141,8 +153,17 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
               <FormLabel>Contraseña</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Input type={showPassword ? "text" : "password"} placeholder="****************" {...field} disabled={isSubmitting} />
-                  <button type="button" onClick={toggleShowPassword} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="****************"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
@@ -160,8 +181,17 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
               <FormLabel>Nueva Contraseña</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Input type={showNewPassword ? "text" : "password"} placeholder="****************" {...field} disabled={isSubmitting} />
-                  <button type="button" onClick={toggleShowNewPassword} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <Input
+                    type={showNewPassword ? "text" : "password"}
+                    placeholder="****************"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShowNewPassword}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
                     {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
@@ -179,9 +209,22 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
               <FormLabel>Confirmar Nueva Contraseña</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Input type={showConfirmNewPassword ? "text" : "password"} placeholder="****************" {...field} disabled={isSubmitting} />
-                  <button type="button" onClick={toggleShowConfirmNewPassword} className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    {showConfirmNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  <Input
+                    type={showConfirmNewPassword ? "text" : "password"}
+                    placeholder="****************"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShowConfirmNewPassword}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showConfirmNewPassword ? (
+                      <EyeOff size={20} />
+                    ) : (
+                      <Eye size={20} />
+                    )}
                   </button>
                 </div>
               </FormControl>
@@ -195,7 +238,6 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
             {isSubmitting ? "Actualizando..." : "Actualizar Datos"}
           </Button>
         </div>
-
       </form>
     </Form>
   );
