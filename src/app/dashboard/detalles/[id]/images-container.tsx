@@ -32,7 +32,11 @@ function ImagesContainer({ imgs, coordinates }: ImagesContainerProps) {
       .filter((date): date is string => date !== null) ?? [];
 
   const onlyDay =
-    imgs?.filter((result) => result.date === day + "T00:00") ?? [];
+    imgs?.filter((result) => {
+      const resultDate = result.date.split("T")[0];
+      const targetDay = day.split("T")[0];
+      return resultDate === targetDay;
+    }) ?? [];
 
   return (
     <div className="grid grid-rows-2 h-full w-full gap-y-4">

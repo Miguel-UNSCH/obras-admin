@@ -3,7 +3,7 @@ import { Calendar } from "../ui/calendar";
 
 interface DayProps {
   Daysworked: string[];
-  setDay: React.Dispatch<React.SetStateAction<string>>;
+  setDay: (value: string) => void;
 }
 
 function CalendarCustom({ Daysworked, setDay }: DayProps) {

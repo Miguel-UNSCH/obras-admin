@@ -21,13 +21,32 @@ interface ImageDetallesProps {
   closeModal: () => void;
 }
 
-function ImageDetalles({ selectedImage, coordinates, closeModal }: ImageDetallesProps) {
+function ImageDetalles({
+  selectedImage,
+  coordinates,
+  closeModal,
+}: ImageDetallesProps) {
   const latitude = selectedImage.latitud
     ? parseFloat(selectedImage.latitud)
     : null;
   const longitude = selectedImage.longitud
     ? parseFloat(selectedImage.longitud)
     : null;
+
+  const date = new Date(selectedImage.date);
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+  const formattedDate = localDate.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const formattedTime = localDate.toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 
   return (
     <div className="bg-white dark:bg-background p-6 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
@@ -50,7 +69,7 @@ function ImageDetalles({ selectedImage, coordinates, closeModal }: ImageDetalles
               <strong>Longitud:</strong> {longitude ?? "No disponible"}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              <strong>Fecha:</strong> {selectedImage.date}
+              <strong>Fecha:</strong> {formattedDate}, {formattedTime}
             </p>
           </div>
         </div>
@@ -58,7 +77,11 @@ function ImageDetalles({ selectedImage, coordinates, closeModal }: ImageDetalles
         <div className="w-full md:w-1/2 flex justify-center items-center">
           {latitude !== null && longitude !== null ? (
             <div className="w-full h-[250px] md:h-full min-w-[200px] min-h-[250px] rounded-lg overflow-hidden">
-              <MapLocationDeatils longitude={longitude} latitude={latitude} coordinates={coordinates}/>
+              <MapLocationDeatils
+                longitude={longitude}
+                latitude={latitude}
+                coordinates={coordinates}
+              />
             </div>
           ) : (
             <p className="text-gray-500 text-center">

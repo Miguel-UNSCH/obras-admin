@@ -19,8 +19,10 @@ export async function getDaysWorked(propietario_id: string) {
       propietario_id: resul.propietario_id,
       date: (() => {
         const date = new Date(resul.date);
-        date.setUTCHours(0, 0, 0, 0);
-        return date.toISOString().split("T")[0] + "T00:00";
+        const formattedDate = date.toISOString().split("T");
+        const datePart = formattedDate[0];
+        const timePart = formattedDate[1].substring(0, 5);
+        return `${datePart}T${timePart}`;
       })(),
     }));
 
