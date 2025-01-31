@@ -11,6 +11,7 @@ interface obra {
   propietario_id: string;
   resident: string;
   projectType: string;
+  obraType: string;
   cui: string;
   name: string;
   areaOrLength: string;

@@ -7,6 +7,7 @@ interface obra {
   propietario_id: string;
   resident: string;
   projectType: string;
+  obraType: string;
   cui: string;
   name: string;
   areaOrLength: string;
@@ -37,7 +38,7 @@ export function ObraDetails({ obra, onClose }: ObraDetailsProps) {
           <div>
             <strong className="text-[13px]">Proyecto:</strong>{" "}
             <span className="text-[12px] text-gray-200">
-              {obra.projectType}
+              {obra.obraType}
             </span>
           </div>
           <div>

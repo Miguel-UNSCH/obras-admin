@@ -92,7 +92,7 @@ function CustomMap({ obra }: { obra: obra }) {
         initialViewState={{
           longitude: centroid.longitude,
           latitude: centroid.latitude,
-          zoom: 15,
+          zoom: 17,
         }}
         attributionControl={false}
         onLoad={handleStyleLoad}

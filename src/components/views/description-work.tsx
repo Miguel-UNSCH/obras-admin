@@ -27,6 +27,7 @@ interface obra {
   propietario_id: string;
   resident: string;
   projectType: string;
+  obraType: string;
   cui: string;
   name: string;
   areaOrLength: string;
@@ -90,7 +91,7 @@ function DescriptionWork({
     }
   };
 
-  const porcentaje = 0.999; //AQUI VENDRA CUANDO SE ACTUALICE EL PORCENTAJE DE LA OBRA
+  const porcentaje = 1; //AQUI VENDRA CUANDO SE ACTUALICE EL PORCENTAJE DE LA OBRA
 
   return (
     <div className="flex flex-col justify-center h-full p-6 gap-2 bg-white dark:bg-gray-800 shadow-lg">
@@ -101,7 +102,7 @@ function DescriptionWork({
         <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
           <FaCogs className="text-lg text-blue-500" />
           <p className="font-medium">Tipo de Proyecto:</p>
-          <span>{obra.projectType}</span>
+          <span>{obra.obraType}</span>
         </div>
 
         <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">

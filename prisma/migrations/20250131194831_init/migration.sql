@@ -57,6 +57,7 @@ CREATE TABLE "Coordinates" (
     "propietario_id" TEXT NOT NULL,
     "resident" TEXT NOT NULL,
     "projectType" TEXT NOT NULL,
+    "obraType" TEXT NOT NULL,
     "cui" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "areaOrLength" TEXT NOT NULL,

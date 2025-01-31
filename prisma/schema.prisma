@@ -67,6 +67,7 @@ model Coordinates {
   propietario_id String
   resident       String
   projectType    String
+  obraType       String
   cui            String
   name           String
   areaOrLength   String

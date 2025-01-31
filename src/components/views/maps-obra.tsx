@@ -1,4 +1,10 @@
-import Map, { Marker, NavigationControl, Source, Layer, MapLayerMouseEvent } from "react-map-gl";
+import Map, {
+  Marker,
+  NavigationControl,
+  Source,
+  Layer,
+  MapLayerMouseEvent,
+} from "react-map-gl";
 import { TbPointFilled } from "react-icons/tb";
 import { Feature, Polygon, LineString } from "geojson";
 
@@ -36,14 +42,25 @@ function MapObras({
     <Map
       mapboxAccessToken={token}
       initialViewState={{
-        longitude: isClient ? userLocation.longitude : defaultLocation.longitude,
+        longitude: isClient
+          ? userLocation.longitude
+          : defaultLocation.longitude,
         latitude: isClient ? userLocation.latitude : defaultLocation.latitude,
         zoom: 13,
       }}
       mapStyle={"mapbox://styles/mapbox/satellite-streets-v12"}
       onClick={handleMapClick}
     >
-      <NavigationControl position="bottom-right" />
+      <NavigationControl
+        position="bottom-right"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          padding: "10px",
+          gap: "10px",
+          borderRadius: "15px",
+        }}
+      />
 
       {newPoints.map(([lng, lat], index) => {
         let markerColor = "#FF0000";

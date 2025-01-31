@@ -11,6 +11,7 @@ interface obra {
   propietario_id: string;
   resident: string;
   projectType: string;
+  obraType: string;
   cui: string;
   name: string;
   areaOrLength: string;
@@ -39,7 +40,7 @@ function SideDashboard({ totalObras, setDefaultLocation }: obrasProsp) {
       const matchesSearch =
         obra.name.toLowerCase().includes(searchTerm) ||
         obra.state.toLowerCase().includes(searchTerm) ||
-        obra.projectType.toLowerCase().includes(searchTerm) ||
+        obra.obraType.toLowerCase().includes(searchTerm) ||
         obra.cui.toLowerCase().includes(searchTerm) ||
         obra.resident.toLowerCase().includes(searchTerm);
       return matchesSearch;

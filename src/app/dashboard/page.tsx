@@ -27,6 +27,7 @@ function Page() {
     getObrasData();
   }, []);
 
+
   return (
     <div className="flex flex-col sm:flex-row h-full w-full gap-4">
       <div className="overflow-y-auto p-4 h-full w-fit rounded-xl bg-gradient-to-b from-[#ececec] dark:from-[#2D2D2D] dark:to-[#2D2D2D] to-[#eba77a]">

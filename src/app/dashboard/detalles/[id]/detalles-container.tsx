@@ -7,6 +7,7 @@ interface obra {
   propietario_id: string;
   resident: string;
   projectType: string;
+  obraType: string;
   cui: string;
   name: string;
   areaOrLength: string;
@@ -30,6 +31,7 @@ function DetallesContainer({ obraDetalles, resident }: { obraDetalles: obra, res
     areaOrLength: obraDetalles.areaOrLength,
     resident: obraDetalles.resident,
     projectType: obraDetalles.projectType,
+    obraType: obraDetalles.obraType,
     propietario_id: obraDetalles.propietario_id,
   };
 

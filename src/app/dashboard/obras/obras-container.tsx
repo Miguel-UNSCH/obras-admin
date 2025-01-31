@@ -28,6 +28,7 @@ interface OptionProps {
 
 function ObrasContainer({ obras }: ObrasContainerProps) {
   const [selectedOption, setSelectedOption] = useState<string>("");
+  const [obraType, setObraType] = useState<string>("");
   const [points, setPoints] = useState<[number, number][]>([]);
   const [projectType, setProjectType] = useState<string>("");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -82,13 +83,14 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
     }
 
     try {
-      if (!obraSeleccionada || !points || !areaOrLength) {
+      if (!obraSeleccionada || !points || !areaOrLength || !obraType) {
         toasterCustom(400, "Por favor complete todos los campos requeridos.");
         return;
       }
       const data = await guardarObra(
         obraSeleccionada.nombre_completo,
         projectType,
+        obraType,
         obraSeleccionada.codigo_CUI,
         obraSeleccionada.nombre,
         points,
@@ -115,15 +117,52 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
     }
   };
 
+  const optionIcon = [
+    { value: "Acueducto", label: "Acueducto" },
+    { value: "Aeropuerto", label: "Aeropuerto" },
+    { value: "Almacen", label: "Almacén" },
+    { value: "Canal", label: "Canal" },
+    { value: "Carretera", label: "Carretera" },
+    { value: "Clinica", label: "Clínica" },
+    { value: "Cultural", label: "Cultural" },
+    { value: "Deposito", label: "Depósito" },
+    { value: "Edificio", label: "Edificio" },
+    { value: "Embalse", label: "Embalse" },
+    { value: "Escuela", label: "Escuela" },
+    { value: "Estadio", label: "Estadio" },
+    { value: "Fabrica", label: "Fábrica" },
+    { value: "Ferrocarril", label: "Ferrocarril" },
+    { value: "Hospital", label: "Hospital" },
+    { value: "Infraestructurasanitaria", label: "Infraestructura sanitaria" },
+    { value: "Mercado", label: "Mercado" },
+    { value: "Parque", label: "Parque" },
+    { value: "Planta", label: "Planta" },
+    { value: "Puente", label: "Puente" },
+    { value: "Puerto", label: "Puerto" },
+    { value: "Represa", label: "Represa" },
+    { value: "Terminaltransporte", label: "Terminal de transporte" },
+    { value: "Tunel", label: "Túnel" },
+    { value: "Universidad", label: "Universidad" },
+  ];
+
   return (
     <div className="flex flex-col gap-4 h-full">
       <div className="grid sm:grid-row-1 md:grid-cols-[1fr_auto] items-center gap-4">
-        <Combobox
-          placeholder="Seleccione una obra"
-          options={options}
-          onChange={(value: string | null) => setSelectedOption(value || "")}
-          value={selectedOption}
-        />
+        <div className="grid sm:grid-row-1 md:grid-cols-[1fr_auto] items-center gap-2">
+          <Combobox
+            placeholder="Seleccione una obra"
+            options={options}
+            onChange={(value: string | null) => setSelectedOption(value || "")}
+            value={selectedOption}
+          />
+          <Combobox
+            placeholder="Tipo de obra"
+            options={optionIcon}
+            onChange={(value: string | null) => setObraType(value || "")}
+            value={obraType}
+          />
+        </div>
+
         <ButtonSave onClick={handleSaveClick} />
       </div>
 
