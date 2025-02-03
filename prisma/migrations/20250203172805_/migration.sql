@@ -75,6 +75,7 @@ CREATE TABLE "Image" (
     "latitud" TEXT,
     "longitud" TEXT,
     "propietario_id" TEXT NOT NULL,
+    "cui" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

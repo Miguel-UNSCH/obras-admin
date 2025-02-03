@@ -3,11 +3,12 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function getDaysWorked(propietario_id: string) {
+export async function getDaysWorked(propietario_id: string, cui: string) {
   try {
     const resultados = await prisma.image.findMany({
       where: {
         propietario_id: propietario_id,
+        cui: cui,
       },
     });
 
