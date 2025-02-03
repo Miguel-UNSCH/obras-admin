@@ -87,7 +87,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache openssl nginx nano
+# Instalar dependencias necesarias
+RUN apk add --no-cache openssl nginx nano tzdata
+
+# Configurar la zona horaria a Lima, Perú
+RUN cp /usr/share/zoneinfo/America/Lima /etc/localtime && \
+    echo "America/Lima" > /etc/timezone
+
+# Copiar archivos desde la etapa de construcción
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public

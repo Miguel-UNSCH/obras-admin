@@ -4,9 +4,12 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { id, cui } = body;
+    const { id, cui, date } = body;
 
-    if (!id || !cui) {
+    const fechaInicio = new Date(`${date}T00:00:00.000Z`);
+    const fechaFin = new Date(`${date}T23:59:59.999Z`);
+
+    if (!id || !cui || !date) {
       return NextResponse.json({ error: "Faltan datos obligatorios" }, {status: 404});
     }
 
@@ -14,6 +17,10 @@ export async function POST(req: Request) {
       where: {
         propietario_id: id,
         cui,
+        date: {
+          gte: fechaInicio,
+          lte: fechaFin,
+        },
       },
     })
 
