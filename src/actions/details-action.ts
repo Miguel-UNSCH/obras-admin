@@ -38,14 +38,14 @@ export async function obtenerDetalles(id: string) {
 export async function FinalizarObra(id: string, cui: string) {
   try {
     await prisma.coordinates.update({
-      where: { id: id },
+      where: { id },
       data: {
         state: "Finalizado",
       },
     });
 
     await prisma.userPhone.updateMany({
-      where: { cui: cui },
+      where: { cui },
       data: {
         state: "Inactivo",
       },
@@ -72,7 +72,7 @@ export async function ActualizarObra(
 ) {
   try {
     await prisma.coordinates.update({
-      where: { id: id },
+      where: { id },
       data: {
         points: JSON.stringify(points),
         projectType: projectType,
@@ -101,31 +101,24 @@ export async function BuscarActulizacionResident(
     const busqueda = await querySecondary(
       `SELECT 
         app."codigo_CUI",
-        apa.propietario_id,
-        CONCAT(apu.apellido_paterno, ' ', apu.apellido_materno, ' ', apu.nombre) AS nombre_completo
+        apa."propietario_id"
       FROM public."archivoProject_proyecto" app
       INNER JOIN public."archivoProject_archivo" apa 
-        ON app.id = apa.nombre_proyecto_id
+        ON app.id = apa."nombre_proyecto_id"
       INNER JOIN public."archivoProject_usuario" apu 
-        ON apa.propietario_id = apu.dni 
-      WHERE apu.rol = '2';`,
+        ON apa."propietario_id" = apu."dni"
+      WHERE apu."rol" = '2'`,
       []
     );
 
     const obraEncontrada = busqueda.find(
-      (user: any) => user.codigo_CUI === codigo_CUI
+      (user: any) =>
+        user.codigo_CUI === codigo_CUI && user.propietario_id === propietario_id
     );
 
-    if (!obraEncontrada) {
-      return false;
-    }
-
-    if (obraEncontrada.propietario_id === propietario_id) {
-      return false;
-    } else {
-      return true;
-    }
-  } catch {
+    return !obraEncontrada;
+  } catch (error) {
+    console.error("Error en la búsqueda:", error);
     return false;
   }
 }
@@ -187,14 +180,14 @@ export async function ActualizarResidenteO(
     }
 
     await prisma.userPhone.updateMany({
-      where: { propietario_id: propietario_id },
+      where: { propietario_id },
       data: {
         state: "Inactivo",
       },
     });
 
     await prisma.coordinates.update({
-      where: { id: id },
+      where: { id },
       data: {
         propietario_id: obraEncontrada?.propietario_id,
         resident: obraEncontrada?.nombre_completo,

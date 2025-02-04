@@ -7,8 +7,8 @@ export async function getDaysWorked(propietario_id: string, cui: string) {
   try {
     const resultados = await prisma.image.findMany({
       where: {
-        propietario_id: propietario_id,
-        cui: cui,
+        propietario_id,
+        cui,
       },
     });
 
