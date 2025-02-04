@@ -64,7 +64,7 @@ function ImageWork({ imgs, coordinates }: ImagesContainerProps) {
       ))}
 
       {selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-6">
           <ImageDetalles
             selectedImage={selectedImage}
             coordinates={coordinates}

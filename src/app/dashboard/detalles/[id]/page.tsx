@@ -41,10 +41,11 @@ function Page() {
     const fetchData = async () => {
       if (id && typeof id === "string") {
         const data = await obtenerDetalles(id);
+
         setObra(data);
 
         if (data && data.propietario_id) {
-          const imgs = await getDaysWorked(data.propietario_id , data.cui);
+          const imgs = await getDaysWorked(data.propietario_id, data.cui);
           setImg(imgs);
 
           if (data.state === "Finalizado") {
