@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ModeChange } from "@/components/mode-change";
 import ButtonInicio from "@/components/buttons/dynamic/button-inicio";
-import ButtonTutorial from "@/components/buttons/dynamic/button-turorial";
+import ButtonObras from "@/components/buttons/dynamic/button-obras";
 import TextAnimate from "@/components/ui/text-animate";
 
 export default function LandingPage() {
@@ -75,7 +75,7 @@ export default function LandingPage() {
 
             <div className="flex justify-center md:justify-start items-center space-x-4 mt-4">
               <ButtonInicio />
-              <ButtonTutorial />
+              <ButtonObras />
             </div>
           </div>
         </div>

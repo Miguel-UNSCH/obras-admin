@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
-import { FaYoutube } from "react-icons/fa";
+import { FaMapLocation } from "react-icons/fa6";
 import Link from "next/link";
 
-const ButtonTutorial = () => {
+const ButtonObras = () => {
   return (
     <StyledWrapper>
-      <Link href="https://www.youtube.com/embed/rs1YAkfF8QM?si=ZqGCtTI1EYK4sWnI">
+      <Link href="/mapobras">
         <div>
           <button className="button">
-            <FaYoutube className="icon" />
-            Ver tutorial
+            <FaMapLocation className="icon" />
+            Ver obras
           </button>
         </div>
       </Link>
@@ -71,4 +71,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default ButtonTutorial;
+export default ButtonObras;
