@@ -29,10 +29,10 @@ function Page() {
 
   return (
     <main className="grid w-full items-center justify-center gap-4">
-      <div>
+      <div className="">
         <UploadImages record={record} />
       </div>
-      <div>
+      <div className="">
         {record.length < 0 ? (
           <p className="text-lg text-gray-600 dark:text-gray-400 text-center">
             No tienes registros en este momento...

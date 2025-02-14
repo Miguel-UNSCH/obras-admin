@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/buttons/button";
 import FormImage from "@/components/forms/formUploadImage";
+import { BiSolidImageAdd } from "react-icons/bi";
 
 interface Record {
   propietario_id: string;
@@ -42,6 +43,7 @@ export default function UploadImages({ record }: UploadImagesProps) {
           className="bg-teal-600 hover:bg-teal-500 dark:bg-teal-500 dark:hover:bg-teal-600"
           onClick={handleConfirmationModal}
         >
+          <BiSolidImageAdd />
           Nuevo registro
         </Button>
       </div>
