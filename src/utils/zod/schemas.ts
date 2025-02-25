@@ -48,11 +48,11 @@ export const updateUserSchema = z
   .object({
     id: z.string().optional(),
     name: z.string().optional(),
+    user: z.string({ required_error: "El nombre de usuario es obligatorio" }),
     email: z
       .string()
       .email({ message: "Debe ser un correo electrónico válido" })
       .optional(),
-    user: z.string({ required_error: "El nombre de usuario es obligatorio" }),
     password: z
       .string({ required_error: "Campo obligatorio" })
       .min(1, "Campo obligatorio"),

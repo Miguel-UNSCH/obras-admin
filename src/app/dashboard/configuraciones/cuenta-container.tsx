@@ -55,8 +55,8 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
     defaultValues: {
       id: session.user.id,
       name: session.user.name,
-      email: session.user.email,
       user: session.user.user,
+      email: session.user.email,
       password: "",
       newPassword: "",
       confirmNewPassword: "",
@@ -119,12 +119,12 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
 
         <FormField
           control={form.control}
-          name="email"
+          name="user"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Correo Electrónico:</FormLabel>
+              <FormLabel>Usuario:</FormLabel>
               <FormControl>
-                <Input placeholder="admin@admin.com" {...field} disabled />
+                <Input placeholder="Admin" {...field} disabled />
               </FormControl>
               <FormMessage className="text-end" />
             </FormItem>
@@ -133,12 +133,12 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
 
         <FormField
           control={form.control}
-          name="user"
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Usuario:</FormLabel>
+              <FormLabel>Correo Electrónico:</FormLabel>
               <FormControl>
-                <Input placeholder="Admin" {...field} disabled />
+                <Input placeholder="admin@admin.com" {...field} />
               </FormControl>
               <FormMessage className="text-end" />
             </FormItem>

@@ -114,6 +114,17 @@ export async function guardarObra(
           (projectType === "Superficie" ? "construcción" : "carretera"),
         description: name,
         status: "actualizado",
+        priority: "alta",
+      },
+    });
+
+    await prisma.notification.create({
+      data: {
+        UserID: propietario_id,
+        title:
+          "Registro de nuevo residente: " + resident,
+        description: "Nuevo residente de la obra: " + name,
+        status: "actualizado",
         priority: "media",
       },
     });

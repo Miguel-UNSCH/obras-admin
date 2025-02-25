@@ -39,7 +39,7 @@ function RegistroItem({ registro }: { registro: Register }) {
           </div>
         </div>
 
-        <div className="text-center flex-1 items-center justify-center border-l-2 pl-4 w-full md:w-1/12">
+        <div className="text-center flex-1 items-center justify-center border-l-2 pl-4 w-full md:w-1/12 min-w-24">
           <p className="text-sm text-gray-600 dark:text-gray-300">
             <strong>CUI</strong>
           </p>
