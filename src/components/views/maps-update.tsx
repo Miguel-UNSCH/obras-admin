@@ -3,13 +3,7 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState, useCallback, useEffect } from "react";
 import { Feature, Polygon, LineString } from "geojson";
-import Map, {
-  NavigationControl,
-  Source,
-  Layer,
-  Marker,
-  MapMouseEvent,
-} from "react-map-gl";
+import { Source, Layer, Marker, MapMouseEvent } from "react-map-gl";
 import ButtonBack from "../buttons/dynamic/icons-back";
 import ButtonSave from "../buttons/dynamic/icons-save";
 import ButtonClose from "../buttons/dynamic/button-backII";
@@ -19,6 +13,8 @@ import toasterCustom from "../toaster-custom";
 import { TbPointFilled } from "react-icons/tb";
 import { ConfirmDialog } from "../dialog/dialog-confirm";
 import medidaTotal from "@/utils/measureWork";
+import { useMapContext } from "@/context/MapContext";
+import MapProvider from "../MapProvider";
 
 interface Obra {
   id: string;
@@ -31,21 +27,60 @@ interface Location {
   longitude: number;
 }
 
-interface obraUpdateProps {
+interface ObraUpdateProps {
   obra: Obra;
   coordinates: Location;
   setNodal: (value: boolean) => void;
 }
 
-function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
-  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+// Componente hijo para manejar el renderizado condicional de las capas
+function MapContent({
+  polygonData,
+  lineData,
+  projectType,
+}: {
+  polygonData: Feature<Polygon> | null;
+  lineData: Feature<LineString> | null;
+  projectType: string;
+}) {
+  const { isMapFullyLoaded } = useMapContext();
 
+  return (
+    <>
+      {isMapFullyLoaded && projectType === "Superficie" && polygonData && (
+        <Source id="polygon-source-update" type="geojson" data={polygonData}>
+          <Layer
+            id="polygon-layer-update"
+            type="fill"
+            paint={{
+              "fill-color": "#CA3938",
+              "fill-opacity": 0.5,
+            }}
+          />
+        </Source>
+      )}
+      {isMapFullyLoaded && projectType === "Carretera" && lineData && (
+        <Source id="line-source-update" type="geojson" data={lineData}>
+          <Layer
+            id="line-layer-update"
+            type="line"
+            paint={{
+              "line-color": "#F7700A",
+              "line-width": 5,
+            }}
+          />
+        </Source>
+      )}
+    </>
+  );
+}
+
+function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
   const [points, setPoints] = useState<[number, number][]>(obra.points);
   const [projectType, setProjectType] = useState<string>(obra.projectType);
-
   const [polygonData, setPolygonData] = useState<Feature<Polygon> | null>(null);
   const [lineData, setLineData] = useState<Feature<LineString> | null>(null);
-  const [showConfirmationModal, SetShowConfirmationModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const createPolygon = (points: [number, number][]): Feature<Polygon> => ({
     type: "Feature",
@@ -90,18 +125,13 @@ function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
 
   useEffect(() => {
     updateGeometryData(points);
-  }, [points, projectType, updateGeometryData]);
+  }, [updateGeometryData, points, projectType]);
 
   const handleMapClick = useCallback((event: MapMouseEvent) => {
     const { lng, lat } = event.lngLat;
     setPoints((prevPoints) => {
       const newPoints: [number, number][] = [...prevPoints, [lng, lat]];
-
-      if (JSON.stringify(prevPoints) !== JSON.stringify(newPoints)) {
-        return newPoints;
-      }
-
-      return prevPoints;
+      return newPoints;
     });
   }, []);
 
@@ -110,7 +140,7 @@ function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
       const updatedPoints = points.slice(0, -1);
       setPoints(updatedPoints);
     } else {
-      toasterCustom(400, "Debe haber al menos 3 punto.");
+      toasterCustom(400, "Debe haber al menos 3 puntos.");
     }
   };
 
@@ -119,16 +149,16 @@ function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
   };
 
   const handleSetShowConfirmationModal = () => {
-    SetShowConfirmationModal(true);
+    setShowConfirmationModal(true);
   };
+
   const handleSetShowClosedModal = () => {
-    SetShowConfirmationModal(false);
+    setShowConfirmationModal(false);
   };
 
   const handleSaveClick = async () => {
     try {
       const areaOrLength = medidaTotal(points, projectType);
-
       const data = await ActualizarObra(
         obra.id,
         points,
@@ -146,40 +176,36 @@ function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
     }
   };
 
+  const handleDrag = useCallback(
+    (event: { lngLat: { lng: number; lat: number } }, index: number) => {
+      const { lng, lat } = event.lngLat;
+      setPoints((prevPoints: [number, number][]) => {
+        const updatedPoints = [...prevPoints];
+        updatedPoints[index] = [lng, lat];
+        return updatedPoints;
+      });
+    },
+    [setPoints]
+  );
+
   return (
-    <div className="relative w-screen h-full p-10 md:p-20">
-      <div className="absolute space-y-4 p-10 md:p-20 top-4 left-4 z-10">
-        <ButtonBack onClick={handleRemoveLastPoint} />
-        <Radio
-          projectType={projectType}
-          setProjectType={handleProjectTypeChange}
-        />
-      </div>
-      <div className="absolute flex flex-row space-x-2 p-10 md:p-20 top-4 right-4 z-10">
-        <ButtonSave onClick={handleSetShowConfirmationModal} />
-        <ButtonClose onClick={() => setNodal(false)} />
-      </div>
-      <Map
-        style={{ width: "100%", height: "100%", borderRadius: "20px" }}
-        mapboxAccessToken={token}
-        initialViewState={{
-          longitude: coordinates.longitude,
-          latitude: coordinates.latitude,
-          zoom: 15,
-        }}
-        mapStyle={"mapbox://styles/mapbox/satellite-streets-v12"}
+    <div className="relative w-full h-full p-10 md:p-20">
+      <MapProvider
+        defaultLocation={coordinates}
+        enableTerrain={false}
         onClick={handleMapClick}
       >
-        <NavigationControl
-          position="bottom-right"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "10px",
-            gap: "10px",
-            borderRadius: "15px",
-          }}
-        />
+        <div className="absolute space-y-4 p-4 top-0 left-0 z-10">
+          <ButtonBack onClick={handleRemoveLastPoint} />
+          <Radio
+            projectType={projectType}
+            setProjectType={handleProjectTypeChange}
+          />
+        </div>
+        <div className="absolute flex flex-row space-x-2 p-4 top-0 right-0 z-10">
+          <ButtonSave onClick={handleSetShowConfirmationModal} />
+          <ButtonClose onClick={() => setNodal(false)} />
+        </div>
 
         {points.map(([lng, lat], index) => {
           let markerColor = "#FF0000";
@@ -195,51 +221,26 @@ function MapsUpdate({ obra, coordinates, setNodal }: obraUpdateProps) {
               longitude={lng}
               latitude={lat}
               draggable
-              onDrag={(event) => {
-                const { lng: newLng, lat: newLat } = event.lngLat;
-                setPoints((prevPoints) => {
-                  const updatedPoints = [...prevPoints];
-                  updatedPoints[index] = [newLng, newLat];
-                  return updatedPoints;
-                });
-              }}
+              onDrag={(event) => handleDrag(event, index)}
             >
               <TbPointFilled size={20} color={markerColor} />
             </Marker>
           );
         })}
 
-        {projectType === "Superficie" && polygonData && (
-          <Source id="polygon-source" type="geojson" data={polygonData}>
-            <Layer
-              id="polygon-layer"
-              type="fill"
-              paint={{
-                "fill-color": "#CA3938",
-                "fill-opacity": 0.5,
-              }}
-            />
-          </Source>
-        )}
-        {projectType === "Carretera" && lineData && (
-          <Source id="line-source" type="geojson" data={lineData}>
-            <Layer
-              id="line-layer"
-              type="line"
-              paint={{
-                "line-color": "#F7700A",
-                "line-width": 5,
-              }}
-            />
-          </Source>
-        )}
-      </Map>
+        <MapContent
+          polygonData={polygonData}
+          lineData={lineData}
+          projectType={projectType}
+        />
+      </MapProvider>
+
       <ConfirmDialog
         isOpen={showConfirmationModal}
         onClose={handleSetShowClosedModal}
         onConfirm={handleSaveClick}
-        title="¿Estas seguro de desea guardar esta nueva coordenada?"
-        description="Los cambios se veran reflejados inmediatamente"
+        title="¿Estás seguro de guardar esta nueva coordenada?"
+        description="Los cambios se verán reflejados inmediatamente"
         styleButton="bg-green-600 hover:bg-green-500"
       />
     </div>

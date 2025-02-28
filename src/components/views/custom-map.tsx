@@ -1,9 +1,25 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
+import MapProvider, {
+  UserLocation,
+  MarkerData,
+} from "@/components/MapProvider";
+import LocationObras from "@/components/views/location-works";
+import calculateHalfwayPoint from "@/utils/midPoint";
+import MarkerOverlay from "../MarkerOverlay";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-import { useEffect, useState, useRef } from "react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import Map, { NavigationControl, ViewState } from "react-map-gl";
-import LocationObras from "./location-works";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import { Button } from "../buttons/button";
+import { ObraDetails } from "../details/obraDetails";
 
 interface obra {
   id: string;
@@ -18,94 +34,96 @@ interface obra {
   points: [number, number][];
 }
 
-interface UserLocation {
-  latitude: number;
-  longitude: number;
-}
-
 interface obrasProps {
   obrasT: obra[];
   defaultLocation: UserLocation;
 }
 
 function CustomMap({ obrasT, defaultLocation }: obrasProps) {
-  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
-  const [styleLoaded, setStyleLoaded] = useState(false);
-
-  const [viewState, setViewState] = useState<ViewState>({
-    latitude: defaultLocation.latitude,
-    longitude: defaultLocation.longitude,
-    zoom: 14,
-    bearing: 0,
-    pitch: 0,
-    padding: { top: 0, right: 0, bottom: 0, left: 0 },
-  });
-
-  const [containerSize, setContainerSize] = useState<{
-    width: number;
-    height: number;
-  }>({
-    width: 0,
-    height: 0,
-  });
-
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const [idobra, setIdobra] = useState<string>("");
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [obraseleccionada, setObraSeleccionada] = useState<obra>();
+  const router = useRouter();
 
   useEffect(() => {
-    setViewState((prevState) => ({
-      ...prevState,
-      latitude: defaultLocation.latitude,
-      longitude: defaultLocation.longitude,
-      transitionDuration: 1000,
-      transitionEasing: (t: number) => t,
-    }));
-  }, [defaultLocation]);
-
-  useEffect(() => {
-    if (mapContainerRef.current) {
-      const { width, height } = mapContainerRef.current.getBoundingClientRect();
-      setContainerSize({ width, height });
+    if (idobra) {
+      const obra = obrasT.find((centinela) => centinela.id === idobra);
+      setObraSeleccionada(obra);
+      setIsDrawerOpen(true);
     }
-  }, []);
+  }, [idobra]);
 
-  const handleStyleLoad = () => {
-    setStyleLoaded(true);
+  const markers: MarkerData[] = obrasT.map((result) => {
+    const { latitude, longitude } = calculateHalfwayPoint(
+      result.points,
+      result.projectType
+    );
+    return {
+      id: result.id,
+      obraType: result.obraType,
+      latitude,
+      longitude,
+    };
+  });
+
+  const handleDetallesClick = () => {
+    if (idobra) {
+      router.push(`/dashboard/detalles/${idobra}`);
+    }
   };
 
   return (
-    <div ref={mapContainerRef} className="w-full h-full">
-      <Map
-        mapboxAccessToken={token}
-        viewState={{
-          ...viewState,
-          width: containerSize.width,
-          height: containerSize.height,
-        }}
-        onMove={(evt) => setViewState(evt.viewState)}
-        attributionControl={false}
-        mapStyle={"mapbox://styles/mapbox/standard"}
-        onLoad={handleStyleLoad}
-        logoPosition="top-right"
+    <div className="relative h-full w-full">
+      <MapProvider
+        defaultLocation={defaultLocation}
+        markers={markers}
+        setIdobra={setIdobra}
       >
-        {styleLoaded && (
-          <>
-            <NavigationControl
-              position="bottom-right"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "10px",
-                gap: "10px",
-                borderRadius: "15px",
-              }}
-            />
-            {obrasT.map((obra, index) => (
-              <LocationObras key={index} obra={obra} />
-            ))}
-          </>
-        )}
-      </Map>
+        <MarkerOverlay markers={markers} />
+        {obrasT.map((obra, index) => (
+          <LocationObras key={index} obra={obra} />
+        ))}
+      </MapProvider>
+
+      <Drawer
+        open={isDrawerOpen}
+        onOpenChange={(isOpen) => {
+          setIsDrawerOpen(isOpen);
+          if (!isOpen) {
+            setIdobra("");
+            setObraSeleccionada(undefined);
+          }
+        }}
+      >
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>
+            </DrawerTitle>
+            <ObraDetails obra={obraseleccionada} />
+          </DrawerHeader>
+
+          <DrawerFooter className="flex justify-end space-x-2">
+            <Button
+              className="bg-green-700 hover:bg-green-600 z-50"
+              onClick={handleDetallesClick}
+            >
+              Detalles
+            </Button>
+            <DrawerClose asChild>
+              <Button className="border-border"
+                variant="outline"
+                onClick={() => {
+                  setIsDrawerOpen(false);
+                  setIdobra("");
+                  setObraSeleccionada(undefined);
+                }}
+              >
+                Cancel
+              </Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

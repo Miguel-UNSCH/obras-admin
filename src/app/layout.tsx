@@ -20,14 +20,11 @@ export const metadata: Metadata = {
   description: "GeObras es una plataforma para la gestión de las obras",
 };
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="es" suppressHydrationWarning>
       <body

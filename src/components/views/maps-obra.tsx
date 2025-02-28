@@ -1,12 +1,7 @@
-import Map, {
-  Marker,
-  NavigationControl,
-  Source,
-  Layer,
-  MapLayerMouseEvent,
-} from "react-map-gl";
+import { Marker, Source, Layer, MapLayerMouseEvent } from "react-map-gl";
 import { TbPointFilled } from "react-icons/tb";
 import { Feature, Polygon, LineString } from "geojson";
+import MapProvider from "../MapProvider";
 
 interface UserLocation {
   latitude: number;
@@ -36,32 +31,13 @@ function MapObras({
   projectType,
   handleMapClick,
 }: MapObrasProps) {
-  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
+  const location = isClient ? userLocation : defaultLocation;
   return (
-    <Map
-      mapboxAccessToken={token}
-      initialViewState={{
-        longitude: isClient
-          ? userLocation.longitude
-          : defaultLocation.longitude,
-        latitude: isClient ? userLocation.latitude : defaultLocation.latitude,
-        zoom: 13,
-      }}
-      mapStyle={"mapbox://styles/mapbox/satellite-streets-v12"}
+    <MapProvider
+      defaultLocation={location}
+      enableTerrain={false}
       onClick={handleMapClick}
     >
-      <NavigationControl
-        position="bottom-right"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          padding: "10px",
-          gap: "10px",
-          borderRadius: "15px",
-        }}
-      />
-
       {newPoints.map(([lng, lat], index) => {
         let markerColor = "#FF0000";
         if (index === 0) markerColor = "#111114";
@@ -76,43 +52,43 @@ function MapObras({
             onDrag={(event) => {
               const { lng: newLng, lat: newLat } = event.lngLat;
               setNewPoints((prevPoints) => {
-                const updatedPoints: [number, number][] = [...prevPoints];
+                const updatedPoints = [...prevPoints];
                 updatedPoints[index] = [newLng, newLat];
                 return updatedPoints;
               });
             }}
           >
             <TbPointFilled size={20} color={markerColor} />
+            {projectType === "Superficie" &&
+              polygonData?.geometry?.coordinates && (
+                <Source id="polygon-source" type="geojson" data={polygonData}>
+                  <Layer
+                    id="polygon-layer"
+                    type="fill"
+                    paint={{
+                      "fill-color": "#CA3938",
+                      "fill-opacity": 0.5,
+                    }}
+                  />
+                </Source>
+              )}
+
+            {projectType === "Carretera" && lineData?.geometry?.coordinates && (
+              <Source id="line-source" type="geojson" data={lineData}>
+                <Layer
+                  id="line-layer"
+                  type="line"
+                  paint={{
+                    "line-color": "#F7700A",
+                    "line-width": 5,
+                  }}
+                />
+              </Source>
+            )}
           </Marker>
         );
       })}
-
-      {projectType === "Superficie" && polygonData?.geometry?.coordinates && (
-        <Source id="polygon-source" type="geojson" data={polygonData}>
-          <Layer
-            id="polygon-layer"
-            type="fill"
-            paint={{
-              "fill-color": "#CA3938",
-              "fill-opacity": 0.5,
-            }}
-          />
-        </Source>
-      )}
-
-      {projectType === "Carretera" && lineData?.geometry?.coordinates && (
-        <Source id="line-source" type="geojson" data={lineData}>
-          <Layer
-            id="line-layer"
-            type="line"
-            paint={{
-              "line-color": "#F7700A",
-              "line-width": 5,
-            }}
-          />
-        </Source>
-      )}
-    </Map>
+    </MapProvider>
   );
 }
 

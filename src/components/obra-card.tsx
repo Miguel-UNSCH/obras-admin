@@ -33,7 +33,7 @@ function ObraCard({ obra, setDefaultLocation }: obrasProsp) {
   };
 
   return (
-    <div className="bg-secondary p-2 rounded-lg space-y-2">
+    <div className="bg-secondary text-start p-2 rounded-lg space-y-2">
       <div className="flex justify-between items-center w-full">
         <div className="flex-1 text-center">
           <h1 className="font-semibold">{`CUI: ${obra.cui}`}</h1>

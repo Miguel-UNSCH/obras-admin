@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/dialog/dialog-confirm";
 import { Combobox } from "@/components/select/combobox";
 import medidaTotal from "@/utils/measureWork";
-
 interface ObraProps {
   nombre: string;
   codigo_CUI: string;
@@ -32,6 +31,11 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
   const [points, setPoints] = useState<[number, number][]>([]);
   const [projectType, setProjectType] = useState<string>("");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+  const defaultLocation = {
+    latitude: -13.160441,
+    longitude: -74.225832,
+  };
 
   const options: OptionProps[] = useMemo(
     () => obras.map((obra) => ({ value: obra.codigo_CUI, label: obra.nombre })),
@@ -145,6 +149,13 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
     { value: "Universidad", label: "Universidad" },
   ];
 
+  // const handleMapClick = useCallback((event: MapMouseEvent) => {
+  //   if (event.defaultPrevented) return;
+
+  //   const { lng, lat } = event.lngLat;
+  //   setPoints((prevPoints) => [...prevPoints, [lng, lat]]);
+  // }, []);
+
   return (
     <div className="flex flex-col gap-4 h-full">
       <div className="grid sm:grid-row-1 md:grid-cols-[1fr_auto] items-center gap-4">
@@ -170,6 +181,7 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
         <NewCoordinates
           setPoints={setPoints}
           setProjectTypestyle={setProjectType}
+          defaultLocation = {defaultLocation}
         />
       </div>
 
@@ -177,7 +189,7 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
         isOpen={showConfirmationModal}
         onClose={handleCloseConfirmationModal}
         onConfirm={handleConfirmSave}
-        title="¿Estas seguro de guardar esta información?"
+        title="¿Estás seguro de guardar esta información?"
         description="Los datos guardados incluirán nombres y coordenadas"
         styleButton="bg-green-500 hover:bg-emerald-500"
       />
