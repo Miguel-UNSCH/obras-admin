@@ -37,31 +37,35 @@ function MapContent({
 
   return (
     <>
-      {isMapFullyLoaded && projectType === "Superficie" && polygonData?.geometry?.coordinates && (
-        <Source id="polygon-source" type="geojson" data={polygonData}>
-          <Layer
-            id="polygon-layer"
-            type="fill"
-            paint={{
-              "fill-color": "#CA3938",
-              "fill-opacity": 0.5,
-            }}
-          />
-        </Source>
-      )}
+      {isMapFullyLoaded &&
+        projectType === "Superficie" &&
+        polygonData?.geometry?.coordinates && (
+          <Source id="polygon-source" type="geojson" data={polygonData}>
+            <Layer
+              id="polygon-layer"
+              type="fill"
+              paint={{
+                "fill-color": "#CA3938",
+                "fill-opacity": 0.5,
+              }}
+            />
+          </Source>
+        )}
 
-      {isMapFullyLoaded && projectType === "Carretera" && lineData?.geometry?.coordinates && (
-        <Source id="line-source" type="geojson" data={lineData}>
-          <Layer
-            id="line-layer"
-            type="line"
-            paint={{
-              "line-color": "#F7700A",
-              "line-width": 5,
-            }}
-          />
-        </Source>
-      )}
+      {isMapFullyLoaded &&
+        projectType === "Carretera" &&
+        lineData?.geometry?.coordinates && (
+          <Source id="line-source" type="geojson" data={lineData}>
+            <Layer
+              id="line-layer"
+              type="line"
+              paint={{
+                "line-color": "#F7700A",
+                "line-width": 5,
+              }}
+            />
+          </Source>
+        )}
     </>
   );
 }
@@ -112,7 +116,8 @@ function NewCoordinates({
 
   const handleMapClick = useCallback((event: MapMouseEvent) => {
     const { lng, lat } = event.lngLat;
-    setNewPoints((prevPoints: [number, number][]) => { // Tipamos prevPoints explícitamente
+    setNewPoints((prevPoints: [number, number][]) => {
+      // Tipamos prevPoints explícitamente
       const newPoints: [number, number][] = [...prevPoints, [lng, lat]];
       return newPoints;
     });
@@ -135,7 +140,8 @@ function NewCoordinates({
   const handleDrag = useCallback(
     (event: { lngLat: { lng: number; lat: number } }, index: number) => {
       const { lng: newLng, lat: newLat } = event.lngLat;
-      setNewPoints((prevPoints: [number, number][]) => { // Tipamos prevPoints explícitamente
+      setNewPoints((prevPoints: [number, number][]) => {
+        // Tipamos prevPoints explícitamente
         const updatedPoints = [...prevPoints];
         updatedPoints[index] = [newLng, newLat];
         return updatedPoints;
@@ -148,6 +154,7 @@ function NewCoordinates({
     <div className="relative w-full h-full">
       <MapProvider
         defaultLocation={defaultLocation}
+        mapStyle="mapbox://styles/mapbox/standard"
         enableTerrain={false}
         onClick={handleMapClick}
       >

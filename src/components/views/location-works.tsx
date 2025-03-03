@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-as-const */
+import { useMapContext } from "@/context/MapContext";
 import { Feature, Polygon, LineString } from "geojson";
 
 import { Source, Layer } from "react-map-gl";
@@ -17,6 +18,7 @@ interface obra {
 }
 
 function LocationObras({ obra }: { obra: obra }) {
+  const { isMapFullyLoaded } = useMapContext();
   const typeObra = obra.projectType === "Superficie" ? "Polygon" : "LineString";
 
   const layerConfig =
@@ -60,9 +62,11 @@ function LocationObras({ obra }: { obra: obra }) {
 
   return (
     <>
-      <Source id={`source-${obra.id}`} type="geojson" data={geoJsonData}>
-        <Layer {...layerConfig} />
-      </Source>
+      {isMapFullyLoaded && (
+        <Source id={`source-${obra.id}`} type="geojson" data={geoJsonData}>
+          <Layer {...layerConfig} />
+        </Source>
+      )}
     </>
   );
 }

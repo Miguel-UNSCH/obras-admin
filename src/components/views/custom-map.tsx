@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "../buttons/button";
 import { ObraDetails } from "../details/obraDetails";
+import MapStylePreview from "../maps/map-style";
 
 interface obra {
   id: string;
@@ -42,8 +43,40 @@ interface obrasProps {
 function CustomMap({ obrasT, defaultLocation }: obrasProps) {
   const [idobra, setIdobra] = useState<string>("");
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [selectedStyle, setSelectedStyle] = useState(
+    "mapbox://styles/mapbox/standard"
+  );
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [obraseleccionada, setObraSeleccionada] = useState<obra>();
+  const [enableTerrain, setEnableTerrain] = useState(false);
   const router = useRouter();
+
+  // Estilos de mapa disponibles
+  const styles = [
+    {
+      label: "Animado",
+      url: "mapbox://styles/mapbox/standard",
+      terrain: false,
+    },
+    {
+      label: "Satelital",
+      url: "mapbox://styles/mapbox/satellite-streets-v12",
+      terrain: true,
+    },
+    {
+      label: "Relieve",
+      url: "mapbox://styles/mapbox/outdoors-v11",
+      terrain: true,
+    },
+  ];
+
+  // Efecto para manejar el cambio de estilo y activar/desactivar el terreno
+  useEffect(() => {
+    const currentStyleObj = styles.find((s) => s.url === selectedStyle);
+    if (currentStyleObj) {
+      setEnableTerrain(currentStyleObj.terrain);
+    }
+  }, [selectedStyle]);
 
   useEffect(() => {
     if (idobra) {
@@ -72,12 +105,58 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
     }
   };
 
+  // Obtenemos el objeto del estilo seleccionado para mostrar su etiqueta
+  const selectedStyleObj =
+    styles.find((s) => s.url === selectedStyle) || styles[0];
+
   return (
     <div className="relative h-full w-full">
+      {/* Contenedor para la selección de estilo (dropdown) */}
+      <div
+        className="absolute z-10"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 8,
+          padding: 8,
+        }}
+      >
+        {!dropdownOpen ? (
+          <div onClick={() => setDropdownOpen(true)}>
+            <MapStylePreview
+              key="selected"
+              styleUrl={selectedStyleObj.url}
+              name={selectedStyleObj.label}
+              isActive={true}
+              onSelect={() => {}}
+              defaultLocation={defaultLocation}
+            />
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: 8 }}>
+            {styles.map((style, index) => (
+              <MapStylePreview
+                key={index}
+                styleUrl={style.url}
+                name={style.label}
+                isActive={selectedStyle === style.url}
+                onSelect={() => {
+                  setSelectedStyle(style.url);
+                  setDropdownOpen(false);
+                }}
+                defaultLocation={defaultLocation}
+              />
+            ))}
+          </div>
+        )}
+      </div>
       <MapProvider
         defaultLocation={defaultLocation}
         markers={markers}
         setIdobra={setIdobra}
+        mapStyle={selectedStyle}
+        enableTerrain={enableTerrain}
       >
         <MarkerOverlay markers={markers} />
         {obrasT.map((obra, index) => (
@@ -97,8 +176,7 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
       >
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>
-            </DrawerTitle>
+            <DrawerTitle></DrawerTitle>
             <ObraDetails obra={obraseleccionada} />
           </DrawerHeader>
 
@@ -110,7 +188,8 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
               Detalles
             </Button>
             <DrawerClose asChild>
-              <Button className="border-border"
+              <Button
+                className="border-border"
                 variant="outline"
                 onClick={() => {
                   setIsDrawerOpen(false);

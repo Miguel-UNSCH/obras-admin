@@ -193,6 +193,7 @@ function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
       <MapProvider
         defaultLocation={coordinates}
         enableTerrain={false}
+        mapStyle="mapbox://styles/mapbox/standard"
         onClick={handleMapClick}
       >
         <div className="absolute space-y-4 p-4 top-0 left-0 z-10">

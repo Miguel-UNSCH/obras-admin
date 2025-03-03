@@ -52,6 +52,10 @@ interface MapProviderProps {
   setIdobra?: (id: string) => void;
   enableTerrain?: boolean;
   onClick?: (event: MapMouseEvent) => void;
+  mapStyle?: string;
+  width?: string;
+  height?: string;
+  interactive?: boolean;
 }
 
 const containerStyle: React.CSSProperties = {
@@ -75,8 +79,11 @@ const MapProvider: React.FC<MapProviderProps> = ({
   defaultLocation,
   markers,
   setIdobra,
-  enableTerrain = true,
+  enableTerrain = false,
   onClick,
+  mapStyle,
+  width = "100%",
+  height = "100%",
 }) => {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -123,6 +130,7 @@ const MapProvider: React.FC<MapProviderProps> = ({
               });
             }
             setTerrainLoaded(true);
+
             console.log("Terreno configurado exitosamente");
           } catch (error) {
             console.error("Error al configurar el terreno:", error);
@@ -234,19 +242,16 @@ const MapProvider: React.FC<MapProviderProps> = ({
 
   return (
     <MapContext.Provider value={contextValue}>
-      <div style={containerStyle}>
+      <div style={{ ...containerStyle, width, height }}>
         <Map
           mapboxAccessToken={token}
           {...viewState}
           onMove={handleMove}
           style={{ width: "100%", height: "100%" }}
-          mapStyle={
-            enableTerrain
-              ? "mapbox://styles/mapbox/satellite-streets-v12"
-              : "mapbox://styles/mapbox/standard"
-          }
+          mapStyle={mapStyle}
           onLoad={handleMapLoad}
           onClick={onClick}
+          onZoom={handleMapLoad}
           dragPan={true}
           dragRotate={true}
           scrollZoom={true}

@@ -91,7 +91,7 @@ function CustomMap({ obra }: { obra: Obra }) {
 
   return (
     <div className="relative w-full h-full">
-      <MapProvider defaultLocation={centroid} enableTerrain={false}>
+      <MapProvider defaultLocation={centroid} enableTerrain={false} mapStyle="mapbox://styles/mapbox/standard">
         {obra.state === "Ejecucion" && (
           <Button
             className="absolute bg-green-600 hover:bg-green-500 top-4 right-4 z-10"
