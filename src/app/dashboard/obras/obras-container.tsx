@@ -1,6 +1,6 @@
 "use client";
 
-import NewCoordinates from "@/components/views/register-Location";
+import NewCoordinatesMap from "@/components/maps/map-new-coordinates";
 import { useState, useMemo } from "react";
 import ButtonSave from "@/components/buttons/dynamic/icons-save";
 import { guardarObra } from "@/actions/obras-actions";
@@ -25,17 +25,16 @@ interface OptionProps {
   label: string;
 }
 
-function ObrasContainer({ obras }: ObrasContainerProps) {
+export default function ObrasContainer({ obras }: ObrasContainerProps) {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [obraType, setObraType] = useState<string>("");
   const [points, setPoints] = useState<[number, number][]>([]);
   const [projectType, setProjectType] = useState<string>("");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
-  const defaultLocation = {
-    latitude: -13.160441,
-    longitude: -74.225832,
-  };
+    const defaultLocation = {
+      latitude: -13.160441,
+      longitude: -74.225832,
+    };
 
   const options: OptionProps[] = useMemo(
     () => obras.map((obra) => ({ value: obra.codigo_CUI, label: obra.nombre })),
@@ -68,38 +67,24 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
   };
 
   const handleConfirmSave = async () => {
-    if (points.length < 3) {
-      toasterCustom(
-        400,
-        "El polígono no tiene suficientes puntos para ser válido."
-      );
-      return;
-    }
-
     const areaOrLength = medidaTotal(points, projectType);
 
     const obraSeleccionada = obras.find(
       (obra) => obra.codigo_CUI === selectedOption
     );
-    if (!obraSeleccionada) {
-      toasterCustom(400, "No se encontró la obra seleccionada.");
-      return;
-    }
 
     try {
-      if (!obraSeleccionada || !points || !areaOrLength || !obraType) {
+      if (!obraSeleccionada || !points || !obraType) {
         toasterCustom(400, "Por favor complete todos los campos requeridos.");
         return;
       }
+
       const data = await guardarObra(
-        obraSeleccionada.nombre_completo,
+        obraSeleccionada,
         projectType,
         obraType,
-        obraSeleccionada.codigo_CUI,
-        obraSeleccionada.nombre,
         points,
-        areaOrLength,
-        obraSeleccionada.propietario_id
+        areaOrLength
       );
 
       if (!data) {
@@ -149,13 +134,6 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
     { value: "Universidad", label: "Universidad" },
   ];
 
-  // const handleMapClick = useCallback((event: MapMouseEvent) => {
-  //   if (event.defaultPrevented) return;
-
-  //   const { lng, lat } = event.lngLat;
-  //   setPoints((prevPoints) => [...prevPoints, [lng, lat]]);
-  // }, []);
-
   return (
     <div className="flex flex-col gap-4 h-full">
       <div className="grid sm:grid-row-1 md:grid-cols-[1fr_auto] items-center gap-4">
@@ -178,11 +156,7 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
       </div>
 
       <div className="rounded-3xl overflow-hidden w-full h-full shadow-lg">
-        <NewCoordinates
-          setPoints={setPoints}
-          setProjectTypestyle={setProjectType}
-          defaultLocation = {defaultLocation}
-        />
+        <NewCoordinatesMap setPoints={setPoints} setProjectTypestyle={setProjectType} defaultLocation={defaultLocation}/>
       </div>
 
       <ConfirmDialog
@@ -196,5 +170,3 @@ function ObrasContainer({ obras }: ObrasContainerProps) {
     </div>
   );
 }
-
-export default ObrasContainer;

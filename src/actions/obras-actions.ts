@@ -70,49 +70,52 @@ export async function getProyectos() {
 }
 
 export async function guardarObra(
-  resident: string,
+  obra: {
+    nombre_completo: string;
+    codigo_CUI: string;
+    nombre: string;
+    propietario_id: string;
+  },
   projectType: string,
   obraType: string,
-  cui: string,
-  name: string,
   points: [number, number][],
-  areaOrLength: string,
-  propietario_id: string
+  areaOrLength: string
 ) {
   try {
     await prisma.coordinates.create({
       data: {
         state: "Ejecucion",
-        propietario_id,
-        resident,
+        propietario_id: obra.propietario_id,
+        resident: obra.nombre_completo,
         projectType,
         obraType,
-        cui,
-        name,
+        cui: obra.codigo_CUI,
+        name: obra.nombre,
         areaOrLength,
         points: JSON.stringify(points),
       },
     });
 
-    const hashedNewPassword = await bcrypt.hash(propietario_id, 12);
+    const hashedNewPassword = await bcrypt.hash(obra.propietario_id, 12);
+
     await prisma.userPhone.create({
       data: {
-        name: resident,
-        propietario_id: propietario_id,
-        user: propietario_id,
+        name: obra.nombre_completo,
+        propietario_id: obra.propietario_id,
+        user: obra.propietario_id,
         state: "Activo",
-        cui: cui,
+        cui: obra.codigo_CUI,
         password: hashedNewPassword,
       },
     });
 
     await prisma.notification.create({
       data: {
-        UserID: propietario_id,
+        UserID: obra.propietario_id,
         title:
           "Registro de nueva " +
           (projectType === "Superficie" ? "construcción" : "carretera"),
-        description: name,
+        description: obra.nombre,
         status: "actualizado",
         priority: "alta",
       },
@@ -120,10 +123,9 @@ export async function guardarObra(
 
     await prisma.notification.create({
       data: {
-        UserID: propietario_id,
-        title:
-          "Registro de nuevo residente: " + resident,
-        description: "Nuevo residente de la obra: " + name,
+        UserID: obra.propietario_id,
+        title: "Registro de nuevo residente: " + obra.nombre_completo,
+        description: "NUEVO RESIDENTE DE LA OBRA: " + obra.nombre,
         status: "actualizado",
         priority: "media",
       },

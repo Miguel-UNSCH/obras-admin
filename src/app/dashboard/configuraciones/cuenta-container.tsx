@@ -37,7 +37,7 @@ type CuentaContainerProps = {
   session: Session;
 };
 
-export function CuentaContainer({ session }: CuentaContainerProps) {
+export default function CuentaContainer({ session }: CuentaContainerProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -243,4 +243,3 @@ export function CuentaContainer({ session }: CuentaContainerProps) {
   );
 }
 
-export default CuentaContainer;

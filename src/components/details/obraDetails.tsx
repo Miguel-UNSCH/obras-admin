@@ -29,40 +29,29 @@ export function ObraDetails({ obra }: ObraDetailsProps) {
           <strong className="font-bold text-justify">
             Descripción del Proyecto:
           </strong>
-          <p className="leading-relaxed text-gray-200">{obra.name}</p>
+          <p className="leading-relaxed dark:text-gray-100 text-justify">{obra.name}</p>
         </div>
         <div>
-          <strong className="font-bold">CUI:</strong>{" "}
-          <span className="text-gray-200">{obra.cui}</span>
+          <strong className="font-bold">CUI: </strong>
+          <span className="dark:text-gray-100">{obra.cui}</span>
         </div>
         <div>
-          <strong className="font-bold">Proyecto:</strong>{" "}
-          <span className="text-gray-200">{obra.obraType}</span>
+          <strong className="font-bold">Proyecto: </strong>
+          <span className="dark:text-gray-100">{obra.obraType}</span>
         </div>
         <div>
-          <strong className="font-bold">Medida Aproximada: </strong>{" "}
-          <span className="text-gray-200">{obra.areaOrLength}</span>
+          <strong className="font-bold">Medida Aproximada: </strong>
+          <span className="dark:text-gray-100">{obra.areaOrLength}</span>
         </div>
         <div>
-          <strong className="font-bold">Estado: </strong>{" "}
-          <span className="text-gray-200">{obra.state}</span>
+          <strong className="font-bold">Estado: </strong>
+          <span className="dark:text-gray-100">{obra.state}</span>
         </div>
         <div>
-          <strong className="font-bold">Residente:</strong>{" "}
-          <span className="text-gray-200">{obra.resident}</span>
+          <strong className="font-bold">Residente: </strong>
+          <span className="dark:text-gray-100">{obra.resident}</span>
         </div>
       </div>
     </div>
   );
-}
-
-{
-  /* <div className="flex flex-row p-3">
-  <Link
-    href={`/dashboard/detalles/${obra.id}`}
-    className="mx-auto px-4 py-2 bg-green-600 text-sm text-center items-center rounded-md hover:bg-green-400 transition-colors duration-300"
-  >
-    Detalles
-  </Link>
-</div>; */
 }

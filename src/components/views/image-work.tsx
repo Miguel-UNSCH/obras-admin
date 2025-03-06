@@ -22,7 +22,7 @@ interface ImagesContainerProps {
   coordinates: LocationObra | null;
 }
 
-function ImageWork({ imgs, coordinates }: ImagesContainerProps) {
+export default function ImageWork({ imgs, coordinates }: ImagesContainerProps) {
   const [selectedImage, setSelectedImage] = useState<ImgProps | null>(null);
 
   const closeModal = () => {
@@ -76,4 +76,3 @@ function ImageWork({ imgs, coordinates }: ImagesContainerProps) {
   );
 }
 
-export default ImageWork;

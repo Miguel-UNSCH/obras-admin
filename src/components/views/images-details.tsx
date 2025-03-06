@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import MapLocationDeatils from "./map-location-details";
+import MapLocationPhoto from "./map-location-details";
 
 interface ImgProps {
   id: string;
@@ -21,7 +21,7 @@ interface ImageDetallesProps {
   closeModal: () => void;
 }
 
-function ImageDetalles({
+export default function ImageDetalles({
   selectedImage,
   coordinates,
   closeModal,
@@ -77,7 +77,7 @@ function ImageDetalles({
         <div className="w-full md:w-1/2 flex justify-center items-center">
           {latitude !== null && longitude !== null ? (
             <div className="w-full h-[250px] md:h-full min-w-[200px] min-h-[250px] rounded-lg overflow-hidden">
-              <MapLocationDeatils
+              <MapLocationPhoto
                 longitude={longitude}
                 latitude={latitude}
                 coordinates={coordinates}
@@ -100,5 +100,3 @@ function ImageDetalles({
     </div>
   );
 }
-
-export default ImageDetalles;

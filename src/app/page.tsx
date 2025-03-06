@@ -11,11 +11,6 @@ export default function LandingPage() {
     <div className="relative flex h-screen w-screen">
       <div className="flex-1 h-full w-full absolute top-0 left-0 z-1">
         <div className="absolute z-2 w-1/2 h-full top-0 left-0 bg-gradient-to-r from-white via-white/80 to-transparent dark:from-black dark:via-black/70"></div>
-        {/* <img
-          className="w-full h-full"
-          src="https://res.cloudinary.com/dmr9ef5cl/image/upload/v1737646188/pexels-pixabay-461789_oeszyd.jpg"
-          alt="Logo claro"
-        /> */}
         <video
           src="/video/video.mp4"
           className="w-full h-full object-cover"

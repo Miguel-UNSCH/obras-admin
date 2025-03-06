@@ -1,5 +1,5 @@
 import DescriptionWork from "@/components/views/description-work";
-import MapDrawingPolygon from "@/components/views/map-drawing-polygon";
+import MapLocationWork from "@/components/maps/map-location-work";
 
 interface obra {
   id: string;
@@ -14,7 +14,7 @@ interface obra {
   points: [number, number][];
 }
 
-function DetallesContainer({ obraDetalles, resident }: { obraDetalles: obra, resident: boolean }) {
+export default function DetallesContainer({ obraDetalles, resident }: { obraDetalles: obra, resident: boolean }) {
 
   const mapDetails = {
     id: obraDetalles.id,
@@ -38,7 +38,7 @@ function DetallesContainer({ obraDetalles, resident }: { obraDetalles: obra, res
   return (
     <div className="grid grid-rows-2 h-full w-full gap-y-4">
       <div className="rounded-3xl overflow-hidden">
-        <MapDrawingPolygon obra={mapDetails} />
+        <MapLocationWork obra={mapDetails} />
       </div>
       <div className="rounded-3xl overflow-hidden">
         <DescriptionWork obra={descriptionDetails} resident={resident} />
@@ -46,5 +46,3 @@ function DetallesContainer({ obraDetalles, resident }: { obraDetalles: obra, res
     </div>
   );
 };
-
-export default DetallesContainer;

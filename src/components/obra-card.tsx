@@ -50,9 +50,14 @@ function ObraCard({ obra, setDefaultLocation }: obrasProsp) {
         Tipo de proyecto: {obra.obraType}
       </p>
       <p className="text-secondary-foreground text-sm text-justify">
+        Tamaño aproximado: {obra.areaOrLength}
+      </p>
+      <p className="text-secondary-foreground text-sm text-justify">
         Estado: {obra.state}
       </p>
-      <span className="text-sm text-gray-400">Residente: {obra.resident}</span>
+      <p className="text-secondary-foreground text-sm text-justify">
+        Residente: {obra.resident}
+      </p>
     </div>
   );
 }

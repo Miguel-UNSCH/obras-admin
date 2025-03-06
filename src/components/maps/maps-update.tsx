@@ -7,7 +7,7 @@ import { Source, Layer, Marker, MapMouseEvent } from "react-map-gl";
 import ButtonBack from "../buttons/dynamic/icons-back";
 import ButtonSave from "../buttons/dynamic/icons-save";
 import ButtonClose from "../buttons/dynamic/button-backII";
-import Radio from "./option-figura";
+import Radio from "../views/option-figura";
 import { ActualizarObra } from "@/actions/details-action";
 import toasterCustom from "../toaster-custom";
 import { TbPointFilled } from "react-icons/tb";
@@ -33,21 +33,18 @@ interface ObraUpdateProps {
   setNodal: (value: boolean) => void;
 }
 
-// Componente hijo para manejar el renderizado condicional de las capas
 function MapContent({
   polygonData,
   lineData,
-  projectType,
 }: {
   polygonData: Feature<Polygon> | null;
   lineData: Feature<LineString> | null;
-  projectType: string;
 }) {
   const { isMapFullyLoaded } = useMapContext();
 
   return (
     <>
-      {isMapFullyLoaded && projectType === "Superficie" && polygonData && (
+      {isMapFullyLoaded && polygonData && (
         <Source id="polygon-source-update" type="geojson" data={polygonData}>
           <Layer
             id="polygon-layer-update"
@@ -59,7 +56,7 @@ function MapContent({
           />
         </Source>
       )}
-      {isMapFullyLoaded && projectType === "Carretera" && lineData && (
+      {isMapFullyLoaded && lineData && (
         <Source id="line-source-update" type="geojson" data={lineData}>
           <Layer
             id="line-layer-update"
@@ -75,7 +72,7 @@ function MapContent({
   );
 }
 
-function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
+export default function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
   const [points, setPoints] = useState<[number, number][]>(obra.points);
   const [projectType, setProjectType] = useState<string>(obra.projectType);
   const [polygonData, setPolygonData] = useState<Feature<Polygon> | null>(null);
@@ -137,8 +134,7 @@ function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
 
   const handleRemoveLastPoint = () => {
     if (points.length > 3) {
-      const updatedPoints = points.slice(0, -1);
-      setPoints(updatedPoints);
+      setPoints(points.slice(0, -1));
     } else {
       toasterCustom(400, "Debe haber al menos 3 puntos.");
     }
@@ -229,11 +225,7 @@ function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
           );
         })}
 
-        <MapContent
-          polygonData={polygonData}
-          lineData={lineData}
-          projectType={projectType}
-        />
+        <MapContent polygonData={polygonData} lineData={lineData} />
       </MapProvider>
 
       <ConfirmDialog
@@ -247,5 +239,3 @@ function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
     </div>
   );
 }
-
-export default MapsUpdate;

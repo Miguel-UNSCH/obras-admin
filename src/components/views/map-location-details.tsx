@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/prefer-as-const */
 import { Feature, Polygon, LineString } from "geojson";
-import Map, { NavigationControl, Marker, Source, Layer } from "react-map-gl";
-import { TbPointFilled } from "react-icons/tb";
+import MapProvider, { MarkerData } from "../MapProvider";
+import MarkerOverlay from "../MarkerOverlay";
+import { Layer, Source } from "react-map-gl";
+import { useMapContext } from "@/context/MapContext";
 
 interface LocationObra {
   projectType: string;
@@ -11,23 +14,36 @@ interface LocationObra {
 interface MapLocationDetailsProps {
   longitude: number;
   latitude: number;
-  coordinates: LocationObra | null;
+  coordinates: LocationObra;
 }
 
-function MapLocationDeatils({
+function MapContent({
+  geoJsonData,
+  layerConfig,
+}: {
+  geoJsonData: Feature<Polygon | LineString>;
+  layerConfig: any;
+}) {
+  const { isMapFullyLoaded } = useMapContext();
+
+  return (
+    <>
+      {isMapFullyLoaded && (
+        <Source id="obra-source" type="geojson" data={geoJsonData}>
+          <Layer {...layerConfig} />
+        </Source>
+      )}
+    </>
+  );
+}
+
+export default function MapLocationPhoto({
   longitude,
   latitude,
   coordinates,
 }: MapLocationDetailsProps) {
-  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
-  const hasCoordinates = coordinates && coordinates.points.length > 0;
-
-  const typeObra = hasCoordinates
-    ? coordinates.projectType === "Superficie"
-      ? "Polygon"
-      : "LineString"
-    : null;
+  const typeObra =
+    coordinates?.projectType === "Superficie" ? "Polygon" : "LineString";
 
   const layerConfig =
     typeObra === "Polygon"
@@ -49,8 +65,8 @@ function MapLocationDeatils({
           },
         };
 
-  const geoJsonData: Feature<Polygon | LineString> | null = hasCoordinates
-    ? typeObra === "Polygon"
+  const geoJsonData: Feature<Polygon | LineString> =
+    typeObra === "Polygon"
       ? {
           type: "Feature",
           properties: {},
@@ -66,44 +82,31 @@ function MapLocationDeatils({
             type: "LineString",
             coordinates: coordinates.points,
           },
-        }
-    : null;
+        };
+
+  const markers: MarkerData[] = [
+    {
+      id: "Photo-obra-marker",
+      obraType: "Point",
+      latitude,
+      longitude,
+    },
+  ];
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden">
-      <Map
-        mapboxAccessToken={token}
-        initialViewState={{
-          longitude,
-          latitude,
-          zoom: 15,
+      <MapProvider
+        defaultLocation={{
+          latitude: latitude,
+          longitude: longitude,
         }}
-        style={{ width: "100%", height: "100%" }}
-        mapStyle={"mapbox://styles/mapbox/satellite-streets-v12"}
+        markers={markers}
+        mapStyle={"mapbox://styles/mapbox/standard"}
+        enableTerrain={false}
       >
-        <NavigationControl
-          position="bottom-right"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "5px",
-            gap: "5px",
-            borderRadius: "10px",
-          }}
-        />
-
-        <Marker longitude={longitude} latitude={latitude}>
-          <TbPointFilled size={24} color="#FF0000" />
-        </Marker>
-
-        {geoJsonData && (
-          <Source id="source" type="geojson" data={geoJsonData}>
-            <Layer {...layerConfig} />
-          </Source>
-        )}
-      </Map>
+        <MarkerOverlay markers={markers} />
+        <MapContent geoJsonData={geoJsonData} layerConfig={layerConfig} />
+      </MapProvider>
     </div>
   );
 }
-
-export default MapLocationDeatils;

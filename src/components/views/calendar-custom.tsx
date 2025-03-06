@@ -6,7 +6,7 @@ interface DayProps {
   setDay: (value: string) => void;
 }
 
-function CalendarCustom({ Daysworked, setDay }: DayProps) {
+export default function CalendarCustom({ Daysworked, setDay }: DayProps) {
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
     new Date()
   );
@@ -36,5 +36,3 @@ function CalendarCustom({ Daysworked, setDay }: DayProps) {
     </div>
   );
 }
-
-export default CalendarCustom;

@@ -23,7 +23,7 @@ interface ImagesContainerProps {
 
 const today = new Date().toISOString().split("T")[0];
 
-function ImagesContainer({ imgs, coordinates }: ImagesContainerProps) {
+export default function ImagesContainer({ imgs, coordinates }: ImagesContainerProps) {
   const [day, setDay] = useState<string>(today);
 
   const dayT =
@@ -49,5 +49,3 @@ function ImagesContainer({ imgs, coordinates }: ImagesContainerProps) {
     </div>
   );
 }
-
-export default ImagesContainer;

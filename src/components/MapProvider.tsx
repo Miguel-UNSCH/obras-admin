@@ -4,13 +4,8 @@
 "use client";
 import MapContext from "@/context/MapContext";
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import Map, {
-  NavigationControl,
-  MapRef,
-  ViewState,
-  MapMouseEvent,
-} from "react-map-gl";
-
+import Map, { MapRef, ViewState, MapMouseEvent } from "react-map-gl";
+import { TbPointFilled } from "react-icons/tb";
 import {
   FaRoad,
   FaBuilding,
@@ -66,14 +61,6 @@ const containerStyle: React.CSSProperties = {
   overflow: "hidden",
 };
 
-const navControlStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  padding: "10px",
-  gap: "10px",
-  borderRadius: "15px",
-};
-
 const MapProvider: React.FC<MapProviderProps> = ({
   children,
   defaultLocation,
@@ -87,9 +74,7 @@ const MapProvider: React.FC<MapProviderProps> = ({
 }) => {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-  const [viewState, setViewState] = useState<
-    Omit<ViewState, "width" | "height">
-  >({
+  const [viewState, setViewState] = useState<Omit<ViewState, "width" | "height">>({
     latitude: defaultLocation.latitude,
     longitude: defaultLocation.longitude,
     zoom: 14,
@@ -97,15 +82,15 @@ const MapProvider: React.FC<MapProviderProps> = ({
     pitch: 0,
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
   });
-
   const [map, setMap] = useState<MapRef | null>(null);
   const [isMapFullyLoaded, setIsMapFullyLoaded] = useState(false);
   const [terrainLoaded, setTerrainLoaded] = useState(false);
   const [markerPositions, setMarkerPositions] = useState<
     { id: string; x: number; y: number; obraType: string }[]
   >([]);
+  const [lastDefaultLocation, setLastDefaultLocation] = useState<UserLocation>(defaultLocation);
 
-  //Manejador de Carga del Mapa
+  // Manejador de Carga del Mapa
   const handleMapLoad = useCallback(
     (evt: any) => {
       const mapInstance = evt.target;
@@ -130,7 +115,6 @@ const MapProvider: React.FC<MapProviderProps> = ({
               });
             }
             setTerrainLoaded(true);
-
             console.log("Terreno configurado exitosamente");
           } catch (error) {
             console.error("Error al configurar el terreno:", error);
@@ -147,29 +131,7 @@ const MapProvider: React.FC<MapProviderProps> = ({
     [enableTerrain]
   );
 
-  //Efecto para Actualizar la Posición
-  useEffect(() => {
-    if (map) {
-      const { latitude, longitude } = defaultLocation;
-      if (
-        latitude !== viewState.latitude ||
-        longitude !== viewState.longitude
-      ) {
-        map.flyTo({
-          center: [longitude, latitude],
-          zoom: 17,
-          essential: true,
-        });
-        setViewState((prev) => ({
-          ...prev,
-          latitude,
-          longitude,
-        }));
-      }
-    }
-  }, [defaultLocation, map]);
-
-  //Manejador de Movimiento
+  // Manejador de Movimiento
   const handleMove = useCallback((evt: { viewState: ViewState }) => {
     setViewState((prev) => {
       const { latitude, longitude, zoom, bearing, pitch } = evt.viewState;
@@ -186,7 +148,27 @@ const MapProvider: React.FC<MapProviderProps> = ({
     });
   }, []);
 
-  //Efecto para Actualizar Marcadores
+  // Efecto para animar el cambio de defaultLocation
+  useEffect(() => {
+    if (map && (
+      defaultLocation.latitude !== lastDefaultLocation.latitude ||
+      defaultLocation.longitude !== lastDefaultLocation.longitude
+    )) {
+      map.flyTo({
+        center: [defaultLocation.longitude, defaultLocation.latitude],
+        zoom: 17,
+        essential: true,
+      });
+      setViewState((prev) => ({
+        ...prev,
+        latitude: defaultLocation.latitude,
+        longitude: defaultLocation.longitude,
+      }));
+      setLastDefaultLocation(defaultLocation); // Actualiza la última ubicación conocida
+    }
+  }, [map, defaultLocation]);
+
+  // Efecto para Actualizar Marcadores
   useEffect(() => {
     if (map && markers && markers.length > 0) {
       const positions = markers.map((marker) => {
@@ -197,7 +179,7 @@ const MapProvider: React.FC<MapProviderProps> = ({
     }
   }, [map, viewState, markers]);
 
-  //Valor del Contexto
+  // Valor del Contexto
   const contextValue = useMemo(
     () => ({ map, viewState, setViewState, isMapFullyLoaded, terrainLoaded }),
     [map, viewState, isMapFullyLoaded, terrainLoaded]
@@ -220,24 +202,19 @@ const MapProvider: React.FC<MapProviderProps> = ({
       Fabrica: <FaIndustry className="text-[#6B7280] text-2xl" />,
       Ferrocarril: <FaTrain className="text-[#8B5CF6] text-2xl" />,
       Hospital: <FaHospital className="text-[#16A34A] text-2xl" />,
-      "Infraestructura sanitaria": (
-        <FaTint className="text-[#A21CAF] text-2xl" />
-      ),
+      "Infraestructura sanitaria": <FaTint className="text-[#A21CAF] text-2xl" />,
       Mercado: <FaStore className="text-[#D97706] text-2xl" />,
       Parque: <FaTree className="text-[#15803D] text-2xl" />,
       Planta: <FaIndustry className="text-[#6B7280] text-2xl" />,
       Puente: <FaBridge className="text-[#065F46] text-2xl" />,
       Puerto: <FaShip className="text-[#EC4899] text-2xl" />,
       Represa: <FaCloudRain className="text-[#9333EA] text-2xl" />,
-      "Terminal de transporte": (
-        <FaTruckMoving className="text-[#F59E0B] text-2xl" />
-      ),
+      "Terminal de transporte": <FaTruckMoving className="text-[#F59E0B] text-2xl" />,
       Tunel: <FaRoad className="text-[#4B5563] text-2xl" />,
       Universidad: <FaLandmark className="text-[#EAB308] text-2xl" />,
+      Point: <TbPointFilled className="text-[#DC2626] text-2xl" />,
     };
-    return (
-      iconMap[obraType] || <FaBuilding className="text-gray-400 text-2xl" />
-    );
+    return iconMap[obraType] || <FaBuilding className="text-gray-400 text-2xl" />;
   };
 
   return (
@@ -259,7 +236,6 @@ const MapProvider: React.FC<MapProviderProps> = ({
           touchZoomRotate={true}
           logoPosition="top-right"
         >
-          <NavigationControl position="bottom-right" style={navControlStyle} />
           {children}
         </Map>
 

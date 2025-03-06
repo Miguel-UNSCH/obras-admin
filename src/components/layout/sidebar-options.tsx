@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 import { GoHomeFill } from "react-icons/go";
 import { IoSettings, IoNotifications } from "react-icons/io5";
 import { FaBook } from "react-icons/fa";
-import { BsDatabaseFillCheck } from "react-icons/bs";
 import { usePathname } from "next/navigation";
+import { RiRoadMapFill } from "react-icons/ri";
 import {
   Tooltip,
   TooltipContent,
@@ -24,12 +24,12 @@ function SidebarOptions() {
     },
     {
       href: "/dashboard/registros",
-      icon: <FaBook  className="text-xl" />,
+      icon: <FaBook className="text-xl" />,
       tooltip: "Registros",
     },
     {
       href: "/dashboard/obras",
-      icon: <BsDatabaseFillCheck className="text-xl" />,
+      icon: <RiRoadMapFill className="text-xl" />,
       tooltip: "Obras",
     },
     {

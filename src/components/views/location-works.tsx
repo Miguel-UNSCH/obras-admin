@@ -17,7 +17,7 @@ interface obra {
   points: [number, number][];
 }
 
-function LocationObras({ obra }: { obra: obra }) {
+export function LocationObra({ obra }: { obra: obra }) {
   const { isMapFullyLoaded } = useMapContext();
   const typeObra = obra.projectType === "Superficie" ? "Polygon" : "LineString";
 
@@ -70,5 +70,3 @@ function LocationObras({ obra }: { obra: obra }) {
     </>
   );
 }
-
-export default LocationObras;

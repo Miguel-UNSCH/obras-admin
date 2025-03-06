@@ -4,7 +4,6 @@ import MapProvider, {
   UserLocation,
   MarkerData,
 } from "@/components/MapProvider";
-import LocationObras from "@/components/views/location-works";
 import calculateHalfwayPoint from "@/utils/midPoint";
 import MarkerOverlay from "../MarkerOverlay";
 import { useState, useEffect } from "react";
@@ -20,7 +19,8 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "../buttons/button";
 import { ObraDetails } from "../details/obraDetails";
-import MapStylePreview from "../maps/map-style";
+import MapStylePreview from "./map-style";
+import { LocationObra } from "../views/location-works";
 
 interface obra {
   id: string;
@@ -40,7 +40,7 @@ interface obrasProps {
   defaultLocation: UserLocation;
 }
 
-function CustomMap({ obrasT, defaultLocation }: obrasProps) {
+export default function PrincipalMap({ obrasT, defaultLocation }: obrasProps) {
   const [idobra, setIdobra] = useState<string>("");
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [selectedStyle, setSelectedStyle] = useState(
@@ -111,7 +111,6 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
 
   return (
     <div className="relative h-full w-full">
-      {/* Contenedor para la selección de estilo (dropdown) */}
       <div
         className="absolute z-10"
         style={{
@@ -130,7 +129,6 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
               name={selectedStyleObj.label}
               isActive={true}
               onSelect={() => {}}
-              defaultLocation={defaultLocation}
             />
           </div>
         ) : (
@@ -145,7 +143,6 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
                   setSelectedStyle(style.url);
                   setDropdownOpen(false);
                 }}
-                defaultLocation={defaultLocation}
               />
             ))}
           </div>
@@ -160,7 +157,7 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
       >
         <MarkerOverlay markers={markers} />
         {obrasT.map((obra, index) => (
-          <LocationObras key={index} obra={obra} />
+          <LocationObra key={index} obra={obra} />
         ))}
       </MapProvider>
 
@@ -206,5 +203,3 @@ function CustomMap({ obrasT, defaultLocation }: obrasProps) {
     </div>
   );
 }
-
-export default CustomMap;

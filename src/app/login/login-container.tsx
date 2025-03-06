@@ -13,7 +13,7 @@ type ApiResponse = {
   success?: boolean;
 };
 
-function LoginContainer() {
+export default function LoginContainer() {
   const { status } = useSession();
   const [resApi, setResApi] = useState<ApiResponse | undefined>(undefined);
   const router = useRouter();
@@ -59,5 +59,3 @@ function LoginContainer() {
 
   return <SignIn onSubmit={onSubmit} serverError={resApi?.message} status={resApi?.status} />;
 }
-
-export default LoginContainer;

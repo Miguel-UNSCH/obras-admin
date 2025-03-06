@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { totalObrasRegistradas } from "@/actions/obras-actions";
 
 const DynamicSideDashboard = dynamic(() => import("@/components/views/side-dashboard"), { ssr: false });
-const DynamicCustomMap = dynamic(() => import("@/components/views/custom-map"), { ssr: false });
+const DynamicCustomMap = dynamic(() => import("@/components/maps/custom-map"), { ssr: false });
 
 interface UserLocation {
   latitude: number;

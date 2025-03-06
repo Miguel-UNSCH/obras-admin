@@ -41,7 +41,7 @@ function MapContent({
   );
 }
 
-function CustomMap({ obra }: { obra: Obra }) {
+export default function MapLocationWork({ obra }: { obra: Obra }) {
   const typeObra = obra.projectType === "Superficie" ? "Polygon" : "LineString";
   const [nodal, setNodal] = useState(false);
   const centroid = calculateHalfwayPoint(obra.points, obra.projectType);
@@ -112,5 +112,3 @@ function CustomMap({ obra }: { obra: Obra }) {
     </div>
   );
 }
-
-export default CustomMap;

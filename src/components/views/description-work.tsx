@@ -33,7 +33,7 @@ interface obra {
   areaOrLength: string;
 }
 
-function DescriptionWork({
+export default function DescriptionWork({
   obra,
   resident,
 }: {
@@ -198,5 +198,3 @@ function DescriptionWork({
     </div>
   );
 }
-
-export default DescriptionWork;

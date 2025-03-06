@@ -99,13 +99,13 @@ export async function BuscarActulizacionResident(
 ) {
   try {
     const busqueda = await querySecondary(
-      `SELECT 
+      `SELECT
         app."codigo_CUI",
         apa."propietario_id"
       FROM public."archivoProject_proyecto" app
-      INNER JOIN public."archivoProject_archivo" apa 
+      INNER JOIN public."archivoProject_archivo" apa
         ON app.id = apa."nombre_proyecto_id"
-      INNER JOIN public."archivoProject_usuario" apu 
+      INNER JOIN public."archivoProject_usuario" apu
         ON apa."propietario_id" = apu."dni"
       WHERE apu."rol" = '2'`,
       []
@@ -130,41 +130,40 @@ export async function ActualizarResidenteO(
 ) {
   try {
     const busqueda = await querySecondary(
-      `SELECT 
-        app.nombre, 
+      `SELECT
+        app.nombre,
         app."codigo_CUI",
         apa.propietario_id,
         CONCAT(apu.apellido_paterno, ' ', apu.apellido_materno, ' ', apu.nombre) AS nombre_completo
       FROM public."archivoProject_proyecto" app
-      INNER JOIN public."archivoProject_archivo" apa 
+      INNER JOIN public."archivoProject_archivo" apa
         ON app.id = apa.nombre_proyecto_id
-      INNER JOIN public."archivoProject_usuario" apu 
-        ON apa.propietario_id = apu.dni 
+      INNER JOIN public."archivoProject_usuario" apu
+        ON apa.propietario_id = apu.dni
       WHERE apu.rol = '2';`,
       []
     );
 
-    const obraEncontrada = busqueda.find(
-      (user: any) => user.codigo_CUI === cui
-    );
+    const obraEncontrada = busqueda.find((user) => user.codigo_CUI === cui);
 
-    const result = await prisma.userPhone.findMany();
+    const userEncontrado = await prisma.userPhone.findMany({
+      where: {
+        propietario_id: obraEncontrada?.propietario_id,
+        cui: obraEncontrada?.codigo_CUI,
+      },
+    });
 
-    const userEncontrado = result.find(
-      (user: any) => user.propietario_id === obraEncontrada?.propietario_id
-    );
-
-    if (!userEncontrado) {
+    if (userEncontrado.length === 0) {
       const hashedNewPassword = await bcrypt.hash(
-        obraEncontrada?.propietario_id,
+        obraEncontrada!.propietario_id,
         12
       );
 
       await prisma.userPhone.create({
         data: {
           name: obraEncontrada?.nombre_completo,
-          propietario_id: obraEncontrada?.propietario_id,
-          user: obraEncontrada?.propietario_id,
+          propietario_id: obraEncontrada!.propietario_id,
+          user: obraEncontrada!.propietario_id,
           state: "Activo",
           cui: cui,
           password: hashedNewPassword,
@@ -172,7 +171,10 @@ export async function ActualizarResidenteO(
       });
     } else {
       await prisma.userPhone.updateMany({
-        where: { propietario_id: obraEncontrada?.propietario_id },
+        where: {
+          propietario_id: obraEncontrada?.propietario_id,
+          cui: obraEncontrada?.codigo_CUI,
+        },
         data: {
           state: "Activo",
         },
@@ -180,7 +182,7 @@ export async function ActualizarResidenteO(
     }
 
     await prisma.userPhone.updateMany({
-      where: { propietario_id },
+      where: { propietario_id, cui },
       data: {
         state: "Inactivo",
       },
@@ -196,9 +198,10 @@ export async function ActualizarResidenteO(
 
     await prisma.notification.create({
       data: {
-        UserID: obraEncontrada?.propietario_id,
-        title: "Nuevo residente",
-        description: obraEncontrada?.nombre,
+        UserID: obraEncontrada!.propietario_id,
+        title:
+          "Registro de nuevo residente: " + obraEncontrada?.nombre_completo,
+        description: "NUEVO RESIDENTE DE LA OBRA: " + obraEncontrada!.nombre,
         status: "actualizado",
         priority: "media",
       },

@@ -28,7 +28,7 @@ interface obrasProsp {
   setDefaultLocation: (location: UserLocation) => void;
 };
 
-function SideDashboard({ totalObras, setDefaultLocation }: obrasProsp) {
+export default function SideDashboard({ totalObras, setDefaultLocation }: obrasProsp) {
   const [searchValue, setSearchValue] = useState<string>("");
   const [filteredObras, setFilteredObras] = useState<obra[]>(totalObras);
 
@@ -41,6 +41,7 @@ function SideDashboard({ totalObras, setDefaultLocation }: obrasProsp) {
         obra.name.toLowerCase().includes(searchTerm) ||
         obra.state.toLowerCase().includes(searchTerm) ||
         obra.obraType.toLowerCase().includes(searchTerm) ||
+        obra.areaOrLength.toLowerCase().includes(searchTerm) ||
         obra.cui.toLowerCase().includes(searchTerm) ||
         obra.resident.toLowerCase().includes(searchTerm);
       return matchesSearch;
@@ -89,5 +90,3 @@ function SideDashboard({ totalObras, setDefaultLocation }: obrasProsp) {
     </div>
   );
 }
-
-export default SideDashboard;

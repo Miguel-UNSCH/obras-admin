@@ -7,7 +7,6 @@ interface MapStylePreviewProps {
   name: string;
   isActive: boolean;
   onSelect: () => void;
-  defaultLocation: { latitude: number; longitude: number };
 }
 
 export default function MapStylePreview({
@@ -15,12 +14,17 @@ export default function MapStylePreview({
   name,
   isActive,
   onSelect,
-  defaultLocation,
 }: MapStylePreviewProps) {
+  const defaultLocation = {
+    latitude: -13.160441,
+    longitude: -74.225832,
+  };
   return (
     <div
       onClick={onSelect}
-      className={`border-${isActive ? "4" : "1"} border-blue-500 rounded-lg cursor-pointer`}
+      className={`border-${
+        isActive ? "4" : "1"
+      } border-blue-500 rounded-lg cursor-pointer`}
       style={{ width: "100px", height: "100px", position: "relative" }}
     >
       <MapProvider
