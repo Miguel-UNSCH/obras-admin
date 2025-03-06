@@ -43,21 +43,21 @@ function ObraCard({ obra, setDefaultLocation }: obrasProsp) {
           className="cursor-pointer hover:text-primary"
         />
       </div>
-      <p className="text-secondary-foreground text-sm text-justify">
-        {obra.name}
-      </p>
-      <p className="text-secondary-foreground text-sm text-justify">
-        Tipo de proyecto: {obra.obraType}
-      </p>
-      <p className="text-secondary-foreground text-sm text-justify">
-        Tamaño aproximado: {obra.areaOrLength}
-      </p>
-      <p className="text-secondary-foreground text-sm text-justify">
-        Estado: {obra.state}
-      </p>
-      <p className="text-secondary-foreground text-sm text-justify">
-        Residente: {obra.resident}
-      </p>
+      <div className="text-secondary-foreground text-sm text-justify space-y-3 overflow-hidden">
+        <p>{obra.name}</p>
+        <div>
+          <strong>Tipo de proyecto:</strong> <span>{obra.obraType}</span>
+        </div>
+        <div>
+          <strong>Tamaño Aproximado:</strong> <span>{obra.areaOrLength}</span>
+        </div>
+        <div>
+          <strong>Estado:</strong> <span>{obra.state}</span>
+        </div>
+        <div>
+          <strong>Residente:</strong> <span>{obra.resident}</span>
+        </div>
+      </div>
     </div>
   );
 }
