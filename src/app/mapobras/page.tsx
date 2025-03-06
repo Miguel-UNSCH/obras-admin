@@ -9,7 +9,7 @@ const DynamicSideDashboard = dynamic(
   () => import("@/components/views/side-dashboard"),
   { ssr: false }
 );
-const DynamicCustomMap = dynamic(() => import("@/components/maps/custom-map"), {
+const DynamicCustomMap = dynamic(() => import("@/components/maps/map-principal"), {
   ssr: false,
 });
 

@@ -10,7 +10,7 @@ const DynamicSideDashboard = dynamic(
   { ssr: false }
 );
 const DynamicPrincipalMap = dynamic(
-  () => import("@/components/maps/custom-map"),
+  () => import("@/components/maps/map-principal"),
   { ssr: false }
 );
 

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import MapLocationPhoto from "./map-location-details";
+import MapLocationPhoto from "../maps/map-location-photo";
 
 interface ImgProps {
   id: string;
