@@ -17,13 +17,13 @@ interface LocationObra {
 
 interface ImageDetallesProps {
   selectedImage: ImgProps;
-  coordinates: LocationObra | null;
+  type_points_obra: LocationObra | null;
   closeModal: () => void;
 }
 
 export default function ImageDetalles({
   selectedImage,
-  coordinates,
+  type_points_obra,
   closeModal,
 }: ImageDetallesProps) {
   const latitude = selectedImage.latitud
@@ -80,7 +80,7 @@ export default function ImageDetalles({
               <MapLocationPhoto
                 longitude={longitude}
                 latitude={latitude}
-                coordinates={coordinates}
+                type_points_obra={type_points_obra}
               />
             </div>
           ) : (

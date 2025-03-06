@@ -5,8 +5,13 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { totalObrasRegistradas } from "@/actions/obras-actions";
 
-const DynamicSideDashboard = dynamic(() => import("@/components/views/side-dashboard"), { ssr: false });
-const DynamicCustomMap = dynamic(() => import("@/components/maps/custom-map"), { ssr: false });
+const DynamicSideDashboard = dynamic(
+  () => import("@/components/views/side-dashboard"),
+  { ssr: false }
+);
+const DynamicCustomMap = dynamic(() => import("@/components/maps/custom-map"), {
+  ssr: false,
+});
 
 interface UserLocation {
   latitude: number;
@@ -31,11 +36,17 @@ function Page() {
   return (
     <div className="flex flex-col sm:flex-row h-full w-full gap-4 p-4">
       <div className="overflow-y-auto p-4 h-full w-fit rounded-xl bg-gradient-to-b from-[#ececec] dark:from-[#2D2D2D] dark:to-[#2D2D2D] to-[#eba77a]">
-        <DynamicSideDashboard totalObras={queryResult} setDefaultLocation={setDefaultLocation} />
+        <DynamicSideDashboard
+          totalObras={queryResult}
+          setDefaultLocation={setDefaultLocation}
+        />
       </div>
 
       <div className="rounded-xl overflow-hidden h-full w-full">
-        <DynamicCustomMap obrasT={queryResult} defaultLocation={defaultLocation} />
+        <DynamicCustomMap
+          obrasT={queryResult}
+          defaultLocation={defaultLocation}
+        />
       </div>
     </div>
   );

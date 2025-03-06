@@ -19,10 +19,10 @@ interface LocationObra {
 
 interface ImagesContainerProps {
   imgs: ImgProps[] | null;
-  coordinates: LocationObra | null;
+  type_points_obra: LocationObra | null;
 }
 
-export default function ImageWork({ imgs, coordinates }: ImagesContainerProps) {
+export default function ImageWork({ imgs, type_points_obra }: ImagesContainerProps) {
   const [selectedImage, setSelectedImage] = useState<ImgProps | null>(null);
 
   const closeModal = () => {
@@ -67,7 +67,7 @@ export default function ImageWork({ imgs, coordinates }: ImagesContainerProps) {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-6">
           <ImageDetalles
             selectedImage={selectedImage}
-            coordinates={coordinates}
+            type_points_obra={type_points_obra}
             closeModal={closeModal}
           />
         </div>

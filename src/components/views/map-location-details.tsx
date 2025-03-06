@@ -14,7 +14,7 @@ interface LocationObra {
 interface MapLocationDetailsProps {
   longitude: number;
   latitude: number;
-  coordinates: LocationObra;
+  type_points_obra: LocationObra | null;
 }
 
 function MapContent({
@@ -40,10 +40,10 @@ function MapContent({
 export default function MapLocationPhoto({
   longitude,
   latitude,
-  coordinates,
+  type_points_obra,
 }: MapLocationDetailsProps) {
   const typeObra =
-    coordinates?.projectType === "Superficie" ? "Polygon" : "LineString";
+    type_points_obra?.projectType === "Superficie" ? "Polygon" : "LineString";
 
   const layerConfig =
     typeObra === "Polygon"
@@ -65,6 +65,8 @@ export default function MapLocationPhoto({
           },
         };
 
+  const points = type_points_obra?.points ?? [];
+
   const geoJsonData: Feature<Polygon | LineString> =
     typeObra === "Polygon"
       ? {
@@ -72,7 +74,7 @@ export default function MapLocationPhoto({
           properties: {},
           geometry: {
             type: "Polygon",
-            coordinates: [coordinates.points],
+            coordinates: [points],
           },
         }
       : {
@@ -80,7 +82,7 @@ export default function MapLocationPhoto({
           properties: {},
           geometry: {
             type: "LineString",
-            coordinates: coordinates.points,
+            coordinates: points,
           },
         };
 
@@ -92,6 +94,8 @@ export default function MapLocationPhoto({
       longitude,
     },
   ];
+
+  const hasPoints = points.length > 0;
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden">
@@ -105,7 +109,9 @@ export default function MapLocationPhoto({
         enableTerrain={false}
       >
         <MarkerOverlay markers={markers} />
-        <MapContent geoJsonData={geoJsonData} layerConfig={layerConfig} />
+        {hasPoints && (
+          <MapContent geoJsonData={geoJsonData} layerConfig={layerConfig} />
+        )}
       </MapProvider>
     </div>
   );

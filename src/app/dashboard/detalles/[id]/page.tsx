@@ -63,8 +63,8 @@ function Page() {
 
     fetchData();
   }, [id]);
-  
-  const coordenadasobra = obra
+
+  const type_points_obra = obra
     ? {
         projectType: obra.projectType,
         points: obra.points,
@@ -80,7 +80,7 @@ function Page() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full gap-4">
       <div className="h-full">
-        <ImagesContainer imgs={img} coordinates={coordenadasobra} />
+        <ImagesContainer imgs={img} type_points_obra={type_points_obra} />
       </div>
       <div className="h-full">
         <DetallesContainer obraDetalles={obra} resident={resident} />

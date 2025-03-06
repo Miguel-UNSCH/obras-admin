@@ -18,12 +18,12 @@ interface LocationObra {
 
 interface ImagesContainerProps {
   imgs: Imgs[] | null;
-  coordinates: LocationObra | null;
+  type_points_obra: LocationObra | null;
 }
 
 const today = new Date().toISOString().split("T")[0];
 
-export default function ImagesContainer({ imgs, coordinates }: ImagesContainerProps) {
+export default function ImagesContainer({ imgs, type_points_obra }: ImagesContainerProps) {
   const [day, setDay] = useState<string>(today);
 
   const dayT =
@@ -44,7 +44,7 @@ export default function ImagesContainer({ imgs, coordinates }: ImagesContainerPr
         <CalendarCustom Daysworked={dayT} setDay={setDay} />
       </div>
       <div className="rounded-3xl bg-white dark:bg-gray-800 shadow-lg overflow-y-auto">
-        <ImageWork imgs={onlyDay} coordinates={coordinates} />
+        <ImageWork imgs={onlyDay} type_points_obra={type_points_obra} />
       </div>
     </div>
   );
