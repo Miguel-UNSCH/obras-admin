@@ -35,8 +35,9 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/next.config.js ./ 
+COPY --from=builder /app/prisma ./prisma  
 
-EXPOSE 3000 443
+EXPOSE 3000
 
 # Iniciar Nginx y Next.js
 CMD ["sh", "-c", "nginx -g 'daemon off;' & npm start"]
