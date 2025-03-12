@@ -14,7 +14,13 @@ interface obra {
   points: [number, number][];
 }
 
-export default function DetallesContainer({ obraDetalles, resident }: { obraDetalles: obra, resident: boolean }) {
+interface DetallesContainerProps {
+  obraDetalles: obra;
+  resident: boolean;  // true si es residente, false si es propietario o admin
+  refreshData: () => void;
+}
+
+export default function DetallesContainer({ obraDetalles, resident, refreshData }: DetallesContainerProps) {
 
   const mapDetails = {
     id: obraDetalles.id,
@@ -38,7 +44,7 @@ export default function DetallesContainer({ obraDetalles, resident }: { obraDeta
   return (
     <div className="grid grid-rows-2 h-full w-full gap-y-4">
       <div className="rounded-3xl overflow-hidden">
-        <MapLocationWork obra={mapDetails} />
+        <MapLocationWork obra={mapDetails} refreshData={refreshData}/>
       </div>
       <div className="rounded-3xl overflow-hidden">
         <DescriptionWork obra={descriptionDetails} resident={resident} />

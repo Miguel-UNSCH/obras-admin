@@ -9,7 +9,7 @@ interface ImgProps {
   latitud: string | null;
   longitud: string | null;
   propietario_id: string;
-  date: string;
+  date: Date;
 }
 
 interface LocationObra {

@@ -21,6 +21,7 @@ interface Record {
 interface UploadImagesProps {
   record: Record[];
   setModal: (setModal: boolean) => void;
+  refreshData: () => void;
 }
 
 interface OptionProps {
@@ -28,7 +29,7 @@ interface OptionProps {
   label: string;
 }
 
-export default function FormImage({ record, setModal }: UploadImagesProps) {
+export default function FormImage({ record, setModal, refreshData }: UploadImagesProps) {
   const [editedImg, setEditedImg] = useState<File | null>(null);
   const [fecha, setFecha] = useState<Date | undefined>(undefined);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -61,8 +62,8 @@ export default function FormImage({ record, setModal }: UploadImagesProps) {
     const formData = new FormData();
     formData.append("file", file);
 
-    const filePath = await saveFile(file);
-    return filePath;
+    const fileName = await saveFile(file);
+    return fileName;
   }
 
   const handleConfirmSave = async () => {
@@ -80,10 +81,12 @@ export default function FormImage({ record, setModal }: UploadImagesProps) {
     }
 
     try {
-      await handleFileUpload(editedImg);
+      const uploadedFileName = await handleFileUpload(editedImg);
+      console.log(uploadedFileName);
+      
 
       const response = await guardarImg(
-        `${process.env.NEXT_PUBLIC_URL}/api/uploads/${editedImg.name}`,
+        `${process.env.NEXT_PUBLIC_URL}/api/uploads/${uploadedFileName}`,
         obraSeleccionada?.propietario_id,
         obraSeleccionada?.cui,
         fecha.toISOString()
@@ -95,9 +98,7 @@ export default function FormImage({ record, setModal }: UploadImagesProps) {
       closeModal();
 
       if (response.status === 200) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 0);
+        await refreshData();
       }
     } catch {
       toasterCustom(404, "Error al guardar la imagen");

@@ -8,7 +8,7 @@ interface Imgs {
   latitud: string | null;
   longitud: string | null;
   propietario_id: string;
-  date: string;
+  date: Date;
 }
 
 interface LocationObra {
@@ -26,14 +26,11 @@ const today = new Date().toISOString().split("T")[0];
 export default function ImagesContainer({ imgs, type_points_obra }: ImagesContainerProps) {
   const [day, setDay] = useState<string>(today);
 
-  const dayT =
-    imgs
-      ?.map((result) => result.date)
-      .filter((date): date is string => date !== null) ?? [];
+  const dayT =imgs?.map((result) => result.date).filter((date) => date !== null) ?? [];
 
   const onlyDay =
     imgs?.filter((result) => {
-      const resultDate = result.date.split("T")[0];
+      const resultDate = result.date.toISOString().split("T")[0];
       const targetDay = day.split("T")[0];
       return resultDate === targetDay;
     }) ?? [];

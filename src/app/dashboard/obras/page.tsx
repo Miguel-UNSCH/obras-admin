@@ -11,17 +11,18 @@ export const dynamic = "force-dynamic";
 function Page() {
   const [queryResult, setQueryResult] = useState<any[]>([]);
 
+  const getObrasData = async () => {
+    const obras = await getProyectos();
+    setQueryResult(obras);
+  };
+
   useEffect(() => {
-    const getObrasData = async () => {
-      const obras = await getProyectos();
-      setQueryResult(obras);
-    };
     getObrasData();
   }, []);
 
   return (
     <div className="h-full">
-      <ObrasContainer obras={queryResult} />
+      <ObrasContainer obras={queryResult} refreshData={getObrasData}/>
     </div>
   );
 }

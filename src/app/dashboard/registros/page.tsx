@@ -15,36 +15,32 @@ interface Record {
 
 export const dynamic = "force-dynamic";
 
-function Page() {
+export default function Page() {
   const [record, setRecord] = useState<Record[]>([]);
 
-  useEffect(() => {
-    const fetchRecords = async () => {
-      const data = await getCooImg();
-      setRecord(data);
-    };
+  const fetchRecords = async () => {
+    const data = await getCooImg();
+    setRecord(data);
+  };
 
+  useEffect(() => {
     fetchRecords();
   }, []);
 
   return (
     <main className="grid w-full items-center justify-center gap-4">
-      <div className="">
-        <UploadImages record={record} />
+      <div>
+        <UploadImages record={record} refreshData={fetchRecords} />
       </div>
-      <div className="">
-        {record.length < 0 ? (
-          <p className="text-lg text-gray-600 dark:text-gray-400 text-center">
-            No tienes registros en este momento...
-          </p>
-        ) : (
-          <section className="w-full mx-auto">
+      <div>
+        {record.length > 0 ? (
+          <section>
             <RegistrosContainer registros={record} />
           </section>
+        ) : (
+          <p>No hay registros</p>
         )}
       </div>
     </main>
   );
-}
-
-export default Page;
+};

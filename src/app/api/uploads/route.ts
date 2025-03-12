@@ -5,6 +5,7 @@ import path from "path";
 import multiparty from "multiparty";
 import { Readable } from "stream";
 import type { IncomingMessage } from "http";
+import { v4 as uuidv4 } from "uuid";
 
 // Desactivar el análisis automático del cuerpo de la solicitud en Next.js
 export const config = {
@@ -98,9 +99,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const fileUrl = `${process.env.NEXT_PUBLIC_URL}/api/uploads/${path.basename(
-      file.path
-    )}`;
+    // Generar nuevo nombre con UUID
+    const ext = path.extname(file.originalFilename);
+    const uuidFilename = `${uuidv4()}${ext}`;
+    const newPath = path.join(uploadsDir, uuidFilename);
+
+    // Mover archivo subido al nuevo path con UUID
+    fs.renameSync(file.path, newPath);
+
+    const fileUrl = `${process.env.NEXT_PUBLIC_URL}/api/uploads/${uuidFilename}`;
 
     const newImage = await prisma.image.create({
       data: {

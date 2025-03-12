@@ -20,6 +20,7 @@ interface NewCoordinatesProps {
   setPoints: (localPoints: [number, number][]) => void;
   setProjectTypestyle: (projectType: string) => void;
   defaultLocation: LocationProps;
+  points: [number, number][];
 }
 
 function MapContent({
@@ -65,6 +66,7 @@ export default function MapNewCoordinates({
   setPoints,
   setProjectTypestyle,
   defaultLocation,
+  points,
 }: NewCoordinatesProps) {
   const [newPoints, setNewPoints] = useState<[number, number][]>([]);
   const [projectType, setProjectType] = useState<string>("Superficie");
@@ -140,6 +142,16 @@ export default function MapNewCoordinates({
     updateGeometryData(newPoints);
     setPoints(newPoints);
   }, [newPoints, updateGeometryData, setPoints]);
+
+  useEffect(() => {
+    if (points.length === 0 && newPoints.length > 0) {
+      setNewPoints([]);
+      setPolygonData(null);
+      setLineData(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [points]);
+  
 
   return (
     <div className="relative w-full h-full">

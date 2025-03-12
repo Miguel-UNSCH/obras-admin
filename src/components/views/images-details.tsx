@@ -7,7 +7,7 @@ interface ImgProps {
   latitud: string | null;
   longitud: string | null;
   propietario_id: string;
-  date: string;
+  date: Date;
 }
 
 interface LocationObra {
@@ -34,19 +34,8 @@ export default function ImageDetalles({
     : null;
 
   const date = new Date(selectedImage.date);
-  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
 
-  const formattedDate = localDate.toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const formattedTime = localDate.toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
+  const formattedDate = date.toLocaleString();
 
   return (
     <div className="bg-white dark:bg-background p-6 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
@@ -69,7 +58,7 @@ export default function ImageDetalles({
               <strong>Longitud:</strong> {longitude ?? "No disponible"}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              <strong>Fecha:</strong> {formattedDate}, {formattedTime}
+              <strong>Fecha:</strong> {formattedDate}
             </p>
           </div>
         </div>

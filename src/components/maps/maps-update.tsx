@@ -30,7 +30,8 @@ interface Location {
 interface ObraUpdateProps {
   obra: Obra;
   coordinates: Location;
-  setNodal: (value: boolean) => void;
+  setIsModalActive: (value: boolean) => void;
+  refreshData: () => void;
 }
 
 function MapContent({
@@ -72,7 +73,7 @@ function MapContent({
   );
 }
 
-export default function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdateProps) {
+export default function MapsUpdate({ obra, coordinates, setIsModalActive, refreshData }: ObraUpdateProps) {
   const [points, setPoints] = useState<[number, number][]>(obra.points);
   const [projectType, setProjectType] = useState<string>(obra.projectType);
   const [polygonData, setPolygonData] = useState<Feature<Polygon> | null>(null);
@@ -164,8 +165,8 @@ export default function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdatePr
       toasterCustom(data.status, data.message);
 
       if (data.status === 200) {
-        setNodal(false);
-        window.location.reload();
+        setIsModalActive(false);
+        await refreshData();
       }
     } catch {
       toasterCustom(500, "Error al guardar los datos.");
@@ -201,7 +202,7 @@ export default function MapsUpdate({ obra, coordinates, setNodal }: ObraUpdatePr
         </div>
         <div className="absolute flex flex-row space-x-2 p-4 top-0 right-0 z-10">
           <ButtonSave onClick={handleSetShowConfirmationModal} />
-          <ButtonClose onClick={() => setNodal(false)} />
+          <ButtonClose onClick={() => setIsModalActive(false)} />
         </div>
 
         {points.map(([lng, lat], index) => {

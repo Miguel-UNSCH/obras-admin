@@ -13,9 +13,10 @@ interface Record {
 
 interface UploadImagesProps {
   record: Record[];
+  refreshData: () => void;
 }
 
-export default function UploadImages({ record }: UploadImagesProps) {
+export default function UploadImages({ record, refreshData }: UploadImagesProps) {
   const [Modal, setModal] = useState<boolean>(false);
   const dayActual = new Date().toLocaleDateString("es-ES", {
     weekday: "long",
@@ -50,7 +51,7 @@ export default function UploadImages({ record }: UploadImagesProps) {
 
       {Modal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-6">
-          <FormImage record={record} setModal={setModal} />
+          <FormImage record={record} setModal={setModal} refreshData={refreshData}/>
         </div>
       )}
     </div>

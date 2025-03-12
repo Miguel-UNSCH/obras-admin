@@ -18,6 +18,7 @@ interface ObraProps {
 
 interface ObrasContainerProps {
   obras: ObraProps[];
+  refreshData: () => void;
 }
 
 interface OptionProps {
@@ -25,7 +26,7 @@ interface OptionProps {
   label: string;
 }
 
-export default function ObrasContainer({ obras }: ObrasContainerProps) {
+export default function ObrasContainer({ obras, refreshData }: ObrasContainerProps) {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [obraType, setObraType] = useState<string>("");
   const [points, setPoints] = useState<[number, number][]>([]);
@@ -97,9 +98,13 @@ export default function ObrasContainer({ obras }: ObrasContainerProps) {
       handleCloseConfirmationModal();
 
       if (data.status === 200) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 0);
+        setPoints([])
+        setSelectedOption("")
+        setProjectType("")
+        setSelectedOption("")
+        setObraType("")
+
+        await refreshData()
       }
     } catch {
       toasterCustom(500, "Error al procesar la solicitud.");
@@ -156,7 +161,7 @@ export default function ObrasContainer({ obras }: ObrasContainerProps) {
       </div>
 
       <div className="rounded-3xl overflow-hidden w-full h-full shadow-lg">
-        <NewCoordinatesMap setPoints={setPoints} setProjectTypestyle={setProjectType} defaultLocation={defaultLocation}/>
+        <NewCoordinatesMap points={points} setPoints={setPoints} setProjectTypestyle={setProjectType} defaultLocation={defaultLocation}/>
       </div>
 
       <ConfirmDialog

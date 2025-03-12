@@ -10,7 +10,7 @@ import {
   FaUserEdit,
 } from "react-icons/fa";
 
-import { IoIosSend } from "react-icons/io";
+// import { IoIosSend } from "react-icons/io";
 
 import { useRouter } from "next/navigation";
 import { Button } from "../buttons/button";
@@ -53,9 +53,9 @@ export default function DescriptionWork({
     setShowConfirmationModalU(false);
   };
 
-  const handlemensajeFinalizar = () => {
-    setShowConfirmationModalF(true);
-  };
+  // const handlemensajeFinalizar = () => {
+  //   setShowConfirmationModalF(true);
+  // };
 
   const handleFinalizarConfirmationModal = () => {
     setShowConfirmationModalF(false);
@@ -167,7 +167,7 @@ export default function DescriptionWork({
           </Button>
         )}
 
-        {obra.state === "Ejecucion" && (
+        {/* {obra.state === "Ejecucion" && (
           <Button
             onClick={handlemensajeFinalizar}
             className="bg-fuchsia-900 hover:bg-fuchsia-700"
@@ -175,7 +175,7 @@ export default function DescriptionWork({
           >
             <IoIosSend /> Finalizar
           </Button>
-        )}
+        )} */}
       </div>
 
       <ConfirmDialog

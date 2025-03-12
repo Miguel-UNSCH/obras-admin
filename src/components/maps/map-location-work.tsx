@@ -20,6 +20,11 @@ interface Obra {
   points: [number, number][];
 }
 
+interface MapLocationWorkProps {
+  obra: Obra;
+  refreshData: () => void;
+}
+
 // Componente hijo para manejar el renderizado condicional
 function MapContent({
   geoJsonData,
@@ -41,9 +46,9 @@ function MapContent({
   );
 }
 
-export default function MapLocationWork({ obra }: { obra: Obra }) {
+export default function MapLocationWork({ obra, refreshData }: MapLocationWorkProps) {
   const typeObra = obra.projectType === "Superficie" ? "Polygon" : "LineString";
-  const [nodal, setNodal] = useState(false);
+  const [isModalActive, setIsModalActive] = useState(false);
   const centroid = calculateHalfwayPoint(obra.points, obra.projectType);
 
   const layerConfig =
@@ -86,7 +91,7 @@ export default function MapLocationWork({ obra }: { obra: Obra }) {
         };
 
   const handNodal = () => {
-    setNodal(true);
+    setIsModalActive(true);
   };
 
   return (
@@ -104,9 +109,9 @@ export default function MapLocationWork({ obra }: { obra: Obra }) {
 
         <MapContent geoJsonData={geoJsonData} layerConfig={layerConfig} />
       </MapProvider>
-      {nodal && (
+      {isModalActive && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <MapsUpdate obra={obra} coordinates={centroid} setNodal={setNodal} />
+          <MapsUpdate obra={obra} coordinates={centroid} setIsModalActive={setIsModalActive} refreshData={refreshData}/>
         </div>
       )}
     </div>

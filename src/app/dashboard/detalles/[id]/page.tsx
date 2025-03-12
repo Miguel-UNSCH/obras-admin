@@ -28,7 +28,7 @@ interface imgs {
   latitud: string | null;
   longitud: string | null;
   propietario_id: string;
-  date: string;
+  date: Date;
 }
 
 function Page() {
@@ -37,32 +37,33 @@ function Page() {
   const [img, setImg] = useState<imgs[]>([]);
   const [resident, setResident] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (id && typeof id === "string") {
-        const data = await obtenerDetalles(id);
+  const fetchData = async () => {
+    if (!id) return;
 
-        setObra(data);
+    const idOnly = id?.toString();
+    const data = await obtenerDetalles(idOnly);
+    setObra(data);
 
-        if (data && data.cui) {
-          const imgs = await getDaysWorked(data.cui);
-          setImg(imgs);
+    if (data && data.cui) {
+      const imgs = await getDaysWorked(data.cui);
+      setImg(imgs);
 
-          if (data.state === "Finalizado") {
-            setResident(false);
-          } else {
-            const obraActualizada = await BuscarActulizacionResident(
-              data.cui,
-              data.propietario_id
-            );
-            setResident(obraActualizada);
-          }
-        }
+      if (data.state === "Finalizado") {
+        setResident(false);
+      } else {
+        const obraActualizada = await BuscarActulizacionResident(
+          data.cui,
+          data.propietario_id
+        );
+        setResident(obraActualizada);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const type_points_obra = obra
     ? {
@@ -71,19 +72,13 @@ function Page() {
       }
     : null;
 
-  if (!obra)
-    return (
-      <div className="text-center text-cyan-900 dark:text-teal-400 font-semibold">
-        Cargando...
-      </div>
-    );
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full gap-4">
       <div className="h-full">
         <ImagesContainer imgs={img} type_points_obra={type_points_obra} />
       </div>
       <div className="h-full">
-        <DetallesContainer obraDetalles={obra} resident={resident} />
+        {obra && <DetallesContainer obraDetalles={obra} resident={resident} refreshData={fetchData}/>}
       </div>
     </div>
   );

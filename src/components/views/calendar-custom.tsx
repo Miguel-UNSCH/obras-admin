@@ -2,7 +2,7 @@ import React from "react";
 import { Calendar } from "../ui/calendar";
 
 interface DayProps {
-  Daysworked: string[];
+  Daysworked: Date[];
   setDay: (value: string) => void;
 }
 
